@@ -13,7 +13,7 @@ C Z";
     private IInputProvider inputProvider;
 
     private readonly int partOneSolution = 15;
-    private readonly int partTwoSolution = 45000;
+    private readonly int partTwoSolution = 12;
 
     [SetUp]
     public void Setup()
@@ -33,13 +33,13 @@ C Z";
         part1Result.Should().Be(partOneSolution);
     }
 
-    // [Test]
-    // public void Part2()
-    // {
-    //     var solver = new DayTwoSolver(inputProvider);
+    [Test]
+    public async Task Part2()
+    {
+        var solver = new DayTwoSolver(inputProvider);
 
-    //     var part2Result = solver.SolvePartTwo();
+        var part2Result = await solver.SolvePartTwo();
 
-    //     part2Result.Should().Be(partTwoSolution);
-    // }
+        part2Result.Should().Be(partTwoSolution);
+    }
 }

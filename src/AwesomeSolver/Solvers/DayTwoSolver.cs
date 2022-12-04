@@ -24,6 +24,15 @@ public sealed class DayTwoSolver
         return rpsRounds.Sum(x => x.GetPlayerRoundScore);
     }
 
+    public async Task<int> SolvePartTwo()
+    {
+        await GetInputIfNotProvided();
+
+        var rpsRounds = ParseRPSRounds(input, true);
+
+        return rpsRounds.Sum(x => x.GetPlayerRoundScore);
+    }
+
     private async Task GetInputIfNotProvided()
     {
         if (string.IsNullOrEmpty(input))
@@ -32,14 +41,19 @@ public sealed class DayTwoSolver
         }
     }
 
-    private static IEnumerable<RPSRound> ParseRPSRounds(string input)
+    private static IEnumerable<RPSRound> ParseRPSRounds(string input, bool secondColumnResult = false)
     {
-        return input.Split(Environment.NewLine).Select(x => x.Split(' ')).Select(x => ParseRPSRound(x[0], x[1]));
+        return input.Split(Environment.NewLine).Select(x => x.Split(' ')).Select(x => secondColumnResult ? ParseOpponentResultRound(x[0], x[1]) : ParseOpponentPlayerRound(x[0], x[1]));
     }
 
-    private static RPSRound ParseRPSRound(string opponent, string player)
+    private static RPSRound ParseOpponentPlayerRound(string opponent, string player)
     {
         return new RPSRound(ParseRPSHand(opponent), ParseRPSHand(player));
+    }
+
+    private static RPSRound ParseOpponentResultRound(string opponent, string optimalResult)
+    {
+        return new RPSRound(ParseRPSHand(opponent), ParseRPSRoundResult(optimalResult));
     }
 
     private static RPSHand ParseRPSHand(string opponentOrPlayerHand)
@@ -59,6 +73,17 @@ public sealed class DayTwoSolver
                 throw new ArgumentOutOfRangeException(nameof(opponentOrPlayerHand));
         }
     }
+
+    private static RPSRoundResult ParseRPSRoundResult(string optimalRoundResult)
+    {
+        return optimalRoundResult switch
+        {
+            "X" => RPSRoundResult.Lose,
+            "Y" => RPSRoundResult.Draw,
+            "Z" => RPSRoundResult.Win,
+            _ => throw new ArgumentOutOfRangeException(nameof(optimalRoundResult))
+        };
+    }
 }
 
 public enum RPSHand
@@ -76,8 +101,23 @@ public enum RPSRoundResult
     Win = 6,
 }
 
-public record RPSRound(RPSHand Opponent, RPSHand Player)
+public record RPSRound
 {
+    public RPSHand Opponent { get; init; }
+    public RPSHand Player { get; init; }
+
+    public RPSRound(RPSHand Opponent, RPSHand Player)
+    {
+        this.Opponent = Opponent;
+        this.Player = Player;
+    }
+
+    public RPSRound(RPSHand Opponent, RPSRoundResult desiredResult)
+    {
+        this.Opponent = Opponent;
+        this.Player = RPSCombinations.First(x => x.Key.opponent == Opponent && x.Value == desiredResult).Key.player;
+    }
+
     private int OpponentHandScore => GetHandScore(Opponent);
 
     private int PlayerHandScore => GetHandScore(Player);
@@ -90,19 +130,24 @@ public record RPSRound(RPSHand Opponent, RPSHand Player)
 
     private static RPSRoundResult GetRoundResult(RPSHand opponent, RPSHand player)
     {
-        if (opponent == player)
+        if (RPSCombinations.TryGetValue((opponent, player), out var result))
         {
-            return RPSRoundResult.Draw;
+            return result;
         }
 
-        switch (opponent, player)
-        {
-            case (RPSHand.Rock, RPSHand.Paper):
-            case (RPSHand.Paper, RPSHand.Scissors):
-            case (RPSHand.Scissors, RPSHand.Rock):
-                return RPSRoundResult.Win;
-            default:
-                return RPSRoundResult.Lose;
-        }
+        throw new ArgumentOutOfRangeException();
     }
+
+    private static Dictionary<(RPSHand opponent, RPSHand player), RPSRoundResult> RPSCombinations => new Dictionary<(RPSHand opponent, RPSHand player), RPSRoundResult>
+    {
+        { (RPSHand.Rock, RPSHand.Rock), RPSRoundResult.Draw },
+        { (RPSHand.Paper, RPSHand.Paper), RPSRoundResult.Draw },
+        { (RPSHand.Scissors, RPSHand.Scissors), RPSRoundResult.Draw },
+        { (RPSHand.Rock, RPSHand.Paper), RPSRoundResult.Win },
+        { (RPSHand.Paper, RPSHand.Scissors), RPSRoundResult.Win },
+        { (RPSHand.Scissors, RPSHand.Rock), RPSRoundResult.Win },
+        { (RPSHand.Rock, RPSHand.Scissors), RPSRoundResult.Lose },
+        { (RPSHand.Paper, RPSHand.Rock), RPSRoundResult.Lose },
+        { (RPSHand.Scissors, RPSHand.Paper), RPSRoundResult.Lose },
+    };
 }
