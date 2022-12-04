@@ -5,14 +5,17 @@ using Moq;
 
 namespace AwesomeSolver.Tests;
 
-public class DayTwoTests
+public class DayThreeTests
 {
-    private readonly string dayTwoInput = @"A Y
-B X
-C Z";
+    private readonly string dayTwoInput = @"vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw";
     private IInputProvider inputProvider = null!;
 
-    private readonly int partOneSolution = 15;
+    private readonly int partOneSolution = 157;
     private readonly int partTwoSolution = 12;
 
     [SetUp]
@@ -26,7 +29,7 @@ C Z";
     [Test]
     public async Task Part1()
     {
-        var solver = new DayTwoSolver(inputProvider);
+        var solver = new DayThreeSolver(inputProvider);
 
         var part1Result = await solver.SolvePartOne();
 
@@ -36,7 +39,7 @@ C Z";
     [Test]
     public async Task Part2()
     {
-        var solver = new DayTwoSolver(inputProvider);
+        var solver = new DayThreeSolver(inputProvider);
 
         var part2Result = await solver.SolvePartTwo();
 

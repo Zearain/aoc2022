@@ -28,6 +28,12 @@ switch (chosenDay)
         Console.WriteLine($"DAY 2, PART 1: Total cheating player score = {day2Part1Solution}");
         Console.WriteLine($"DAY 2, PART 2: Perfect strategy guide prediction = {day2Part2Solution}");
         break;
+    case 3:
+        var day3Solver = new DayThreeSolver(defaultInputProvider);
+        var day3Part1Solution = await day3Solver.SolvePartOne();
+
+        Console.WriteLine($"DAY 3, PART 1: Wrongly packed items sum = {day3Part1Solution}");
+        break;
     default:
         throw new ArgumentOutOfRangeException(nameof(chosenDay));
 }
