@@ -31,8 +31,10 @@ switch (chosenDay)
     case 3:
         var day3Solver = new DayThreeSolver(defaultInputProvider);
         var day3Part1Solution = await day3Solver.SolvePartOne();
+        var day3Part2Solution = await day3Solver.SolvePartTwo();
 
         Console.WriteLine($"DAY 3, PART 1: Wrongly packed items sum = {day3Part1Solution}");
+        Console.WriteLine($"DAY 3, PART 2: Sum of badge priorities = {day3Part2Solution}");
         break;
     default:
         throw new ArgumentOutOfRangeException(nameof(chosenDay));

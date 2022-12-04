@@ -29,7 +29,15 @@ public sealed class DayThreeSolver
     {
         await GetInputIfNotProvided();
 
-        throw new NotImplementedException();
+        var elfRucksacks = GetElfRucksacks(input).ToArray();
+        var badges = new List<int>();
+        for (int i = 0; i < elfRucksacks.Length; i += 3)
+        {
+            var elfGroup = elfRucksacks.Skip(i).Take(3);
+            badges.Add(elfGroup.SelectMany(x => x.AllItems).GroupBy(x => x).First(x => x.Count() == 3).Key);
+        }
+
+        return badges.Sum();
     }
 
     private async Task GetInputIfNotProvided()
@@ -54,4 +62,7 @@ public sealed class DayThreeSolver
     }
 }
 
-public record ElfRucksack(IEnumerable<int> FirstCompartmentItems, IEnumerable<int> SecondCompartmentItems);
+public sealed record ElfRucksack(IEnumerable<int> FirstCompartmentItems, IEnumerable<int> SecondCompartmentItems)
+{
+    public IEnumerable<int> AllItems => FirstCompartmentItems.Union(SecondCompartmentItems);
+};

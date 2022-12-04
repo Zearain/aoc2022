@@ -16,7 +16,7 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
     private IInputProvider inputProvider = null!;
 
     private readonly int partOneSolution = 157;
-    private readonly int partTwoSolution = 12;
+    private readonly int partTwoSolution = 70;
 
     [SetUp]
     public void Setup()
