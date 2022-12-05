@@ -1,0 +1,25 @@
+﻿@page "/"
+
+@inject DaySolverFactory SolverFactory
+
+<PageTitle>Advent of Code 2022</PageTitle>
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudGrid>
+        @foreach (var day in AvailableDays.Order())
+        {
+            <MudItem xs="3">
+                <DaySolution Day="day" />
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private int[] AvailableDays {get; set;}
+
+    protected override void OnInitialized()
+    {
+        AvailableDays = SolverFactory.ImplmentedDaySolvers;
+    }
+}

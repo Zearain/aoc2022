@@ -3,9 +3,11 @@ using AwesomeSolver.Core;
 using AwesomeSolver.Core.Services;
 using AwesomeSolver.Core.Solvers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 // Register services
 var serviceCollection = new ServiceCollection();
+serviceCollection.AddLogging();
 serviceCollection.AddSingleton<IInputProvider, FileInputProvider>();
 serviceCollection.AddAdventOfCodeSolvers();
 

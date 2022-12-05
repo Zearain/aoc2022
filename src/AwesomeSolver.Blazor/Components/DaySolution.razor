@@ -1,0 +1,67 @@
+﻿@inject DaySolverFactory SolverFactory
+@inject ILogger<DaySolution> logger
+
+<MudPaper Class="d-flex flex-column align-center justify-center mud-width-full py-8">
+    <MudText Typo="Typo.h3">Day @Day</MudText>
+    <MudExpansionPanels>
+        <MudExpansionPanel Text="Part 1" IsExpandedChanged="Part1ExpandedChanged">
+            @if(string.IsNullOrEmpty(Part1Solution)) {
+                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+            }
+            else {
+                <MudText Typo="Typo.h6">@Part1Solution</MudText>
+            }
+        </MudExpansionPanel>
+        <MudExpansionPanel Text="Part 2" IsExpandedChanged="Part2ExpandedChanged">
+            @if(string.IsNullOrEmpty(Part2Solution)) {
+                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+            }
+            else {
+                <MudText Typo="Typo.h6">@Part2Solution</MudText>
+            }
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public int Day { get; set; }
+
+    private IDaySolver daySolver = null!;
+
+    private string Part1Solution { get; set; }
+    private string Part2Solution { get; set; }
+
+    protected override void OnInitialized()
+    {
+        daySolver = SolverFactory.GetDaySolver(Day);
+    }
+
+    private async Task Part1ExpandedChanged(bool newVal)
+    {
+        if (newVal)
+        {
+            Part1Solution = await daySolver.SolvePartOne();
+            logger.LogInformation("Part 1 solution: {part1Solution}", Part1Solution);
+        }
+        else
+        {
+            // Reset after a while to prevent sudden collapse.
+            Task.Delay(350).ContinueWith(t => Part1Solution = string.Empty).AndForget();
+        }
+    }
+
+    private async Task Part2ExpandedChanged(bool newVal)
+    {
+        if (newVal)
+        {
+            Part2Solution = await daySolver.SolvePartTwo();
+            logger.LogInformation("Part 2 solution: {part2Solution}", Part2Solution);
+        }
+        else
+        {
+            // Reset after a while to prevent sudden collapse.
+            Task.Delay(350).ContinueWith(t => Part2Solution = string.Empty).AndForget();
+        }
+    }
+}
