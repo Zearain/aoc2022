@@ -26,9 +26,19 @@ public sealed class DayFiveSolver : BaseSolver
         return string.Concat(crates.Select(x => x.Peek()));
     }
 
-    public override Task<string> SolvePartTwo()
+    public override async Task<string> SolvePartTwo()
     {
-        throw new NotImplementedException();
+        var sections = await GetInputSectionsAsync();
+
+        var crates = ParseInitialCrateStacks(sections[0]);
+        var instructions = ParseInstructionsSection(sections[1]);
+
+        foreach(var instruction in instructions)
+        {
+            crates = ProcessCrateMover9001Move(crates, instruction);
+        }
+
+        return string.Concat(crates.Select(x => x.Peek()));
     }
 
     public async Task<string[]> GetInputSectionsAsync()
@@ -91,6 +101,25 @@ public sealed class DayFiveSolver : BaseSolver
     {
         var crateToMove = crateStacks[fromIndex].Pop();
         crateStacks[toIndex].Push(crateToMove);
+        return crateStacks;
+    }
+
+    public static Stack<char>[] ProcessCrateMover9001Move(Stack<char>[] crateStacks, MoveInstruction move)
+    {
+        var fromIndex = move.From - 1;
+        var toIndex = move.To - 1;
+
+        var grabbedCrates = new List<char>();
+        for (int i = 0; i < move.Crates; i++)
+        {
+            grabbedCrates.Add(crateStacks[fromIndex].Pop());
+        }
+
+        foreach(var crate in grabbedCrates.Reverse<char>())
+        {
+            crateStacks[toIndex].Push(crate);
+        }
+
         return crateStacks;
     }
 }

@@ -70,6 +70,21 @@ public class DayFiveTests
         var result = await solver.SolvePartOne();
         result.Should().Be("CMZ");
     }
+
+    [TestCaseSource(typeof(DayFiveTestData), nameof(DayFiveTestData.CrateMover9001MoveCases))]
+    public Stack<char>[] ProcessCrateMover9001MoveShouldReturnExpectedStacks(Stack<char>[] initialStacks, MoveInstruction moveInstruction)
+    {
+        return DayFiveSolver.ProcessCrateMover9001Move(initialStacks, moveInstruction);
+    }
+
+    [Test]
+    public async Task SolvePartTwoShouldReturnExpectedResult()
+    {
+        var solver = new DayFiveSolver(inputProvider);
+
+        var result = await solver.SolvePartTwo();
+        result.Should().Be("MCD");
+    }
 }
 
 internal static class DayFiveTestData
@@ -89,7 +104,7 @@ move 1 from 1 to 2";
 [Z] [M] [P]
  1   2   3 ";
 
-    public static Stack<char>[] InitialStacks = new[] {
+    public static Stack<char>[] InitialStacks => new[] {
         new Stack<char>(new[] {'Z', 'N'}),
         new Stack<char>(new[] {'M', 'C', 'D'}),
         new Stack<char>(new[] {'P'}),
@@ -100,14 +115,14 @@ move 3 from 1 to 3
 move 2 from 2 to 1
 move 1 from 1 to 2";
 
-    public static MoveInstruction[] MoveInstructions = new[] {
+    public static MoveInstruction[] MoveInstructions => new[] {
         new MoveInstruction(1, 2, 1),
         new MoveInstruction(3, 1, 3),
         new MoveInstruction(2, 2, 1),
         new MoveInstruction(1, 1, 2),
     };
 
-    public static Stack<char>[][] ProcessMoveInstructionResults = new[] {
+    public static Stack<char>[][] ProcessMoveInstructionResults => new[] {
         new[] {
             new Stack<char>(new[] {'Z', 'N', 'D'}),
             new Stack<char>(new[] {'M', 'C'}),
@@ -138,6 +153,40 @@ move 1 from 1 to 2";
             yield return new TestCaseData(ProcessMoveInstructionResults[0], MoveInstructions[1]).Returns(ProcessMoveInstructionResults[1]);
             yield return new TestCaseData(ProcessMoveInstructionResults[1], MoveInstructions[2]).Returns(ProcessMoveInstructionResults[2]);
             yield return new TestCaseData(ProcessMoveInstructionResults[2], MoveInstructions[3]).Returns(ProcessMoveInstructionResults[3]);
+        }
+    }
+
+    public static Stack<char>[][] CrateMover9001MoveResults => new[] {
+        new[] {
+            new Stack<char>(new[] {'Z', 'N', 'D'}),
+            new Stack<char>(new[] {'M', 'C'}),
+            new Stack<char>(new[] {'P'}),
+        },
+        new[] {
+            new Stack<char>(),
+            new Stack<char>(new[] {'M', 'C'}),
+            new Stack<char>(new[] {'P', 'Z', 'N', 'D'}),
+        },
+        new[] {
+            new Stack<char>(new[] {'M', 'C'}),
+            new Stack<char>(),
+            new Stack<char>(new[] {'P', 'Z', 'N', 'D'}),
+        },
+        new[] {
+            new Stack<char>(new[] {'M'}),
+            new Stack<char>(new[] {'C'}),
+            new Stack<char>(new[] {'P', 'Z', 'N', 'D'}),
+        },
+    };
+
+    public static IEnumerable<TestCaseData> CrateMover9001MoveCases
+    {
+        get
+        {
+            yield return new TestCaseData(InitialStacks, MoveInstructions[0]).Returns(CrateMover9001MoveResults[0]);
+            yield return new TestCaseData(CrateMover9001MoveResults[0], MoveInstructions[1]).Returns(CrateMover9001MoveResults[1]);
+            yield return new TestCaseData(CrateMover9001MoveResults[1], MoveInstructions[2]).Returns(CrateMover9001MoveResults[2]);
+            yield return new TestCaseData(CrateMover9001MoveResults[2], MoveInstructions[3]).Returns(CrateMover9001MoveResults[3]);
         }
     }
 }
