@@ -43,4 +43,14 @@ internal class TestBaseSolver : BaseSolver
     protected override int DayNumber => 0;
 
     public async Task<IEnumerable<string>> GetLinesAsync() => await GetInputLinesAsync();
+
+    public override Task<string> SolvePartOne()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task<string> SolvePartTwo()
+    {
+        throw new NotImplementedException();
+    }
 }

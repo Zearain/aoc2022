@@ -9,8 +9,8 @@ public class DayFourTests
 {
     private IInputProvider inputProvider = null!;
 
-    private readonly int partOneSolution = 2;
-    private readonly int partTwoSolution = 4;
+    private readonly string partOneSolution = "2";
+    private readonly string partTwoSolution = "4";
 
     [SetUp]
     public void Setup()

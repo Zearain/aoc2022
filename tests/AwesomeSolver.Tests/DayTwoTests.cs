@@ -7,19 +7,19 @@ namespace AwesomeSolver.Tests;
 
 public class DayTwoTests
 {
-    private readonly string dayTwoInput = @"A Y
+    private readonly string input = @"A Y
 B X
 C Z";
     private IInputProvider inputProvider = null!;
 
-    private readonly int partOneSolution = 15;
-    private readonly int partTwoSolution = 12;
+    private readonly string partOneSolution = "15";
+    private readonly string partTwoSolution = "12";
 
     [SetUp]
     public void Setup()
     {
         var mockInputProvider = new Mock<IInputProvider>();
-        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(dayTwoInput);
+        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(input);
         inputProvider = mockInputProvider.Object;
     }
 

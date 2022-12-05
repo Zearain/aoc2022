@@ -7,7 +7,7 @@ namespace AwesomeSolver.Tests;
 
 public class DayThreeTests
 {
-    private readonly string dayTwoInput = @"vJrwpWtwJgWrhcsFMMfFFhFp
+    private readonly string input = @"vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
@@ -15,14 +15,14 @@ ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw";
     private IInputProvider inputProvider = null!;
 
-    private readonly int partOneSolution = 157;
-    private readonly int partTwoSolution = 70;
+    private readonly string partOneSolution = "157";
+    private readonly string partTwoSolution = "70";
 
     [SetUp]
     public void Setup()
     {
         var mockInputProvider = new Mock<IInputProvider>();
-        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(dayTwoInput);
+        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(input);
         inputProvider = mockInputProvider.Object;
     }
 

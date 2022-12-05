@@ -2,48 +2,17 @@ using AwesomeSolver.Services;
 
 namespace AwesomeSolver.Solvers;
 
-public sealed class DayTwoSolver
+public sealed class DayTwoSolver : BaseSolver
 {
-    private const int DAY_NUMBER = 2;
-
-    private readonly IInputProvider inputProvider;
-
-    private string input = string.Empty;
-
-    public DayTwoSolver(IInputProvider inputProvider)
+    public DayTwoSolver(IInputProvider inputProvider) : base(inputProvider)
     {
-        this.inputProvider = inputProvider;
     }
 
-    public async Task<int> SolvePartOne()
+    protected override int DayNumber => 2;
+
+    private static IEnumerable<RPSRound> ParseRPSRounds(IEnumerable<string> inputLines, bool secondColumnResult = false)
     {
-        await GetInputIfNotProvided();
-
-        var rpsRounds = ParseRPSRounds(input);
-
-        return rpsRounds.Sum(x => x.GetPlayerRoundScore);
-    }
-
-    public async Task<int> SolvePartTwo()
-    {
-        await GetInputIfNotProvided();
-
-        var rpsRounds = ParseRPSRounds(input, true);
-
-        return rpsRounds.Sum(x => x.GetPlayerRoundScore);
-    }
-
-    private async Task GetInputIfNotProvided()
-    {
-        if (string.IsNullOrEmpty(input))
-        {
-            input = await inputProvider.GetInputStringAsync(DAY_NUMBER);
-        }
-    }
-
-    private static IEnumerable<RPSRound> ParseRPSRounds(string input, bool secondColumnResult = false)
-    {
-        return input.Split(Environment.NewLine).Select(x => x.Split(' ')).Select(x => secondColumnResult ? ParseOpponentResultRound(x[0], x[1]) : ParseOpponentPlayerRound(x[0], x[1]));
+        return inputLines.Select(x => x.Split(' ')).Select(x => secondColumnResult ? ParseOpponentResultRound(x[0], x[1]) : ParseOpponentPlayerRound(x[0], x[1]));
     }
 
     private static RPSRound ParseOpponentPlayerRound(string opponent, string player)
@@ -83,6 +52,20 @@ public sealed class DayTwoSolver
             "Z" => RPSRoundResult.Win,
             _ => throw new ArgumentOutOfRangeException(nameof(optimalRoundResult))
         };
+    }
+
+    public override async Task<string> SolvePartOne()
+    {
+        var rpsRounds = ParseRPSRounds(await GetInputLinesAsync());
+
+        return rpsRounds.Sum(x => x.GetPlayerRoundScore).ToString();
+    }
+
+    public override async Task<string> SolvePartTwo()
+    {
+        var rpsRounds = ParseRPSRounds(await GetInputLinesAsync(), true);
+
+        return rpsRounds.Sum(x => x.GetPlayerRoundScore).ToString();
     }
 }
 

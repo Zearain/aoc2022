@@ -1,5 +1,22 @@
 ﻿using AwesomeSolver.Services;
 using AwesomeSolver.Solvers;
+using Microsoft.Extensions.DependencyInjection;
+
+// Register services
+var serviceCollection = new ServiceCollection();
+serviceCollection.AddSingleton<IInputProvider, FileInputProvider>();
+serviceCollection.AddScoped<DaySolverFactory>();
+
+// Add all solvers as scoped services
+var implementedSolverTypes = typeof(IDaySolver).Assembly.GetTypes()
+    .Where(x => typeof(IDaySolver).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+    .ToArray();
+foreach (var solverType in implementedSolverTypes)
+{
+    serviceCollection.AddScoped(solverType);
+}
+
+var serviceProvider = serviceCollection.BuildServiceProvider();
 
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("Advent of Code 2022!");
@@ -9,41 +26,13 @@ Console.WriteLine("Choose your day number");
 var chosenDayString = Console.ReadLine();
 var chosenDay = int.Parse(chosenDayString ?? string.Empty);
 
-var defaultInputProvider = new FileInputProvider();
+using var scope = serviceProvider.CreateScope();
 
-switch (chosenDay)
-{
-    case 1:
-        var day1Input = await defaultInputProvider.GetInputStringAsync(1);
-        var day1Solver = new DayOneSolver();
+var solverFactory = scope.ServiceProvider.GetRequiredService<DaySolverFactory>();
+var daySolver = solverFactory.GetDaySolver(chosenDay);
 
-        Console.WriteLine($"DAY 1, PART 1: Most calories = {day1Solver.SolvePartOne(day1Input)}");
-        Console.WriteLine($"DAY 1, PART 2: Sum calories top 3 elves = {day1Solver.SolvePartTwo(day1Input)}");
-        break;
-    case 2:
-        var day2Solver = new DayTwoSolver(defaultInputProvider);
-        var day2Part1Solution = await day2Solver.SolvePartOne();
-        var day2Part2Solution = await day2Solver.SolvePartTwo();
+var part1Solution = await daySolver.SolvePartOne();
+Console.WriteLine($"DAY {chosenDay}, PART 1: {part1Solution}");
 
-        Console.WriteLine($"DAY 2, PART 1: Total cheating player score = {day2Part1Solution}");
-        Console.WriteLine($"DAY 2, PART 2: Perfect strategy guide prediction = {day2Part2Solution}");
-        break;
-    case 3:
-        var day3Solver = new DayThreeSolver(defaultInputProvider);
-        var day3Part1Solution = await day3Solver.SolvePartOne();
-        var day3Part2Solution = await day3Solver.SolvePartTwo();
-
-        Console.WriteLine($"DAY 3, PART 1: Wrongly packed items sum = {day3Part1Solution}");
-        Console.WriteLine($"DAY 3, PART 2: Sum of badge priorities = {day3Part2Solution}");
-        break;
-    case 4:
-        var day4Solver = new DayFourSolver(defaultInputProvider);
-        var day4Part1Solution = await day4Solver.SolvePartOne();
-        var day4Part2Solution = await day4Solver.SolvePartTwo();
-
-        Console.WriteLine($"DAY 4, PART 1: {day4Part1Solution}");
-        Console.WriteLine($"DAY 4, PART 2: {day4Part2Solution}");
-        break;
-    default:
-        throw new ArgumentOutOfRangeException(nameof(chosenDay));
-}
+var part2Solution = await daySolver.SolvePartTwo();
+Console.WriteLine($"DAY {chosenDay}, PART 2: {part2Solution}");

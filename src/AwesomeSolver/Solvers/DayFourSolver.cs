@@ -11,16 +11,16 @@ public sealed class DayFourSolver : BaseSolver
     {
     }
 
-    public async Task<int> SolvePartOne()
+    public override async Task<string> SolvePartOne()
     {
         var elfPairLines = await this.GetInputLinesAsync();
-        return elfPairLines.Select(ParseElfPairAssignment).Where(x => IsFullOverlap(x.FirstElfAssignment, x.SecondElfAssignment)).Count();
+        return elfPairLines.Select(ParseElfPairAssignment).Where(x => IsFullOverlap(x.FirstElfAssignment, x.SecondElfAssignment)).Count().ToString();
     }
 
-    public async Task<int> SolvePartTwo()
+    public override async Task<string> SolvePartTwo()
     {
         var elfPairLines = await this.GetInputLinesAsync();
-        return elfPairLines.Select(ParseElfPairAssignment).Where(x => IsAnyOverlap(x.FirstElfAssignment, x.SecondElfAssignment)).Count();
+        return elfPairLines.Select(ParseElfPairAssignment).Where(x => IsAnyOverlap(x.FirstElfAssignment, x.SecondElfAssignment)).Count().ToString();
     }
 
     public (Range FirstElfAssignment, Range SecondElfAssignment) ParseElfPairAssignment(string elfPairLine)
