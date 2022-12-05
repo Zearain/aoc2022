@@ -1,9 +1,9 @@
-using AwesomeSolver.Services;
-using AwesomeSolver.Solvers;
+using AwesomeSolver.Core.Services;
+using AwesomeSolver.Core.Solvers;
 using FluentAssertions;
 using Moq;
 
-namespace AwesomeSolver.Tests;
+namespace AwesomeSolver.Core.Tests;
 
 public class BaseSolverTests
 {

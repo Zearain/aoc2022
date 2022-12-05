@@ -1,4 +1,6 @@
-namespace AwesomeSolver.Services;
+using AwesomeSolver.Core.Services;
+
+namespace AwesomeSolver.Console.Services;
 
 public sealed class FileInputProvider : IInputProvider
 {

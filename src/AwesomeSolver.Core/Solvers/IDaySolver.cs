@@ -1,4 +1,4 @@
-namespace AwesomeSolver.Solvers;
+namespace AwesomeSolver.Core.Solvers;
 
 public interface IDaySolver
 {

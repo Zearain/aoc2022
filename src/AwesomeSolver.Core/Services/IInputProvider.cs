@@ -1,4 +1,4 @@
-namespace AwesomeSolver.Services;
+namespace AwesomeSolver.Core.Services;
 
 public interface IInputProvider
 {

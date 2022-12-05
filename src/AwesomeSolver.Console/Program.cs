@@ -1,20 +1,13 @@
-﻿using AwesomeSolver.Services;
-using AwesomeSolver.Solvers;
+﻿using AwesomeSolver.Console.Services;
+using AwesomeSolver.Core;
+using AwesomeSolver.Core.Services;
+using AwesomeSolver.Core.Solvers;
 using Microsoft.Extensions.DependencyInjection;
 
 // Register services
 var serviceCollection = new ServiceCollection();
 serviceCollection.AddSingleton<IInputProvider, FileInputProvider>();
-serviceCollection.AddScoped<DaySolverFactory>();
-
-// Add all solvers as scoped services
-var implementedSolverTypes = typeof(IDaySolver).Assembly.GetTypes()
-    .Where(x => typeof(IDaySolver).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-    .ToArray();
-foreach (var solverType in implementedSolverTypes)
-{
-    serviceCollection.AddScoped(solverType);
-}
+serviceCollection.AddAdventOfCodeSolvers();
 
 var serviceProvider = serviceCollection.BuildServiceProvider();
 

@@ -1,7 +1,9 @@
-using AwesomeSolver.Services;
+using AwesomeSolver.Core.Attributes;
+using AwesomeSolver.Core.Services;
 
-namespace AwesomeSolver.Solvers;
+namespace AwesomeSolver.Core.Solvers;
 
+[DaySolver(1)]
 public sealed class DayOneSolver : BaseSolver
 {
     public DayOneSolver(IInputProvider inputProvider) : base(inputProvider)

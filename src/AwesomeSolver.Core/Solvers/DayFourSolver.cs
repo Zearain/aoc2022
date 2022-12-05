@@ -1,7 +1,9 @@
-using AwesomeSolver.Services;
+using AwesomeSolver.Core.Attributes;
+using AwesomeSolver.Core.Services;
 
-namespace AwesomeSolver.Solvers;
+namespace AwesomeSolver.Core.Solvers;
 
+[DaySolver(4)]
 public sealed class DayFourSolver : BaseSolver
 {
     protected override int DayNumber => 4;

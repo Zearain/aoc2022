@@ -1,8 +1,10 @@
-using AwesomeSolver.Services;
+using AwesomeSolver.Core.Attributes;
+using AwesomeSolver.Core.Services;
 using System.Text.RegularExpressions;
 
-namespace AwesomeSolver.Solvers;
+namespace AwesomeSolver.Core.Solvers;
 
+[DaySolver(5)]
 public sealed class DayFiveSolver : BaseSolver
 {
     public DayFiveSolver(IInputProvider inputProvider) : base(inputProvider)

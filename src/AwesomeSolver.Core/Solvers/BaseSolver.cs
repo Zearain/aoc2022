@@ -1,6 +1,6 @@
-using AwesomeSolver.Services;
+using AwesomeSolver.Core.Services;
 
-namespace AwesomeSolver.Solvers;
+namespace AwesomeSolver.Core.Solvers;
 
 public abstract class BaseSolver : IDaySolver
 {

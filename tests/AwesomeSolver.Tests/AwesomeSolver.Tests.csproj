@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\AwesomeSolver\AwesomeSolver.csproj" />
+    <ProjectReference Include="..\..\src\AwesomeSolver.Core\AwesomeSolver.Core.csproj" />
   </ItemGroup>
 
 </Project>
