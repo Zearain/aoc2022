@@ -6,20 +6,34 @@
 
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
     <MudGrid>
-        @foreach (var day in AvailableDays.Order())
+        @foreach (var day in Days)
         {
             <MudItem xs="3">
-                <DaySolution Day="day" />
+                @if (day.Implemented)
+                {
+                    <DaySolution Day="day.Day" />
+                }
+                else
+                {
+                    <UnsolvedDay Day="day.Day" />
+                }
             </MudItem>
         }
     </MudGrid>
 </MudContainer>
 
 @code {
-    private int[] AvailableDays {get; set;}
+    private (int Day, bool Implemented)[] Days {get; set;}
 
     protected override void OnInitialized()
     {
-        AvailableDays = SolverFactory.ImplmentedDaySolvers;
+        var implemented = SolverFactory.ImplmentedDaySolvers;
+        var days = new List<(int Day, bool Implemented)>();
+        for (int i = 1; i < 26; i++)
+        {
+            days.Add((Day: i, Implemented: implemented.Contains(i)));
+        }
+
+        Days = days.ToArray();
     }
 }
