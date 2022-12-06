@@ -13,6 +13,6 @@ internal sealed class HttpInputProvider : IInputProvider
 
     public async Task<string> GetInputStringAsync(int day)
     {
-        return await httpClient.GetStringAsync($"inputs/{day}/input.txt");
+        return (await httpClient.GetStringAsync($"inputs/{day}/input.txt"))?.Trim().ReplaceLineEndings() ?? string.Empty;
     }
 }
