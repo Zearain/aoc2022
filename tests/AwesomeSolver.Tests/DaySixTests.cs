@@ -1,22 +1,9 @@
-using AwesomeSolver.Core.Services;
 using AwesomeSolver.Core.Solvers;
-using FluentAssertions;
-using Moq;
 
 namespace AwesomeSolver.Core.Tests;
 
 public class DaySixTests
 {
-    private IInputProvider inputProvider = null!;
-
-    [SetUp]
-    public void Setup()
-    {
-        var mockInputProvider = new Mock<IInputProvider>();
-        // mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(DaySixTestData.Input);
-        inputProvider = mockInputProvider.Object;
-    }
-
     [TestCaseSource(typeof(DaySixTestData), nameof(DaySixTestData.StartPacketIndexTestCases))]
     public int ParseStartPacketIndexShouldReturnExpectedResult(string input)
     {
