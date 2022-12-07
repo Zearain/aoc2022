@@ -4,7 +4,7 @@ using AwesomeSolver.Core.Services;
 namespace AwesomeSolver.Core.Solvers;
 
 [DaySolver(1)]
-public sealed class DayOneSolver : BaseSolver
+public sealed class DayOneSolver : SharedDaySolver
 {
     public DayOneSolver(IInputProvider inputProvider) : base(inputProvider)
     {

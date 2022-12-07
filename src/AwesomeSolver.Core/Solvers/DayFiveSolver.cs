@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace AwesomeSolver.Core.Solvers;
 
 [DaySolver(5)]
-public sealed class DayFiveSolver : BaseSolver
+public sealed class DayFiveSolver : SharedDaySolver
 {
     public DayFiveSolver(IInputProvider inputProvider) : base(inputProvider)
     {

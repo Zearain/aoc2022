@@ -5,7 +5,7 @@ using Moq;
 
 namespace AwesomeSolver.Core.Tests;
 
-public class BaseSolverTests
+public class SharedBaseSolverTests
 {
     private readonly string input = @"2-4,6-8
 2-3,4-5
@@ -26,7 +26,7 @@ public class BaseSolverTests
     [Test]
     public async Task GetInputLinesAsyncShouldReturnSixLines()
     {
-        var testBaseSolver = new TestBaseSolver(inputProvider);
+        var testBaseSolver = new TestSolver(inputProvider);
 
         var inputLines = await testBaseSolver.GetLinesAsync();
 
@@ -34,9 +34,9 @@ public class BaseSolverTests
     }
 }
 
-internal class TestBaseSolver : BaseSolver
+internal class TestSolver : SharedDaySolver
 {
-    public TestBaseSolver(IInputProvider inputProvider) : base(inputProvider)
+    public TestSolver(IInputProvider inputProvider) : base(inputProvider)
     {
     }
 

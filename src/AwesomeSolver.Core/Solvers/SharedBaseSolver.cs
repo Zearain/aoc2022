@@ -2,11 +2,11 @@ using AwesomeSolver.Core.Services;
 
 namespace AwesomeSolver.Core.Solvers;
 
-public abstract class BaseSolver : IDaySolver
+public abstract class SharedDaySolver : IDaySolver
 {
     protected readonly IInputProvider inputProvider;
 
-    protected BaseSolver(IInputProvider inputProvider)
+    protected SharedDaySolver(IInputProvider inputProvider)
     {
         this.inputProvider = inputProvider;
     }
