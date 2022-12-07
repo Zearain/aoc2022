@@ -68,6 +68,15 @@ public class DaySevenTests
         result.Should().Be("95437");
     }
 
+    [Test]
+    public async Task SolvePartTwoShouldReturnExpectedResult()
+    {
+        var solver = new DaySevenSolver(inputProvider);
+
+        var result = await solver.SolvePartTwo();
+
+        result.Should().Be("24933642");
+    }
 }
 
 internal static class DaySevenTestData

@@ -54,19 +54,22 @@ public sealed class DaySevenSolver : SharedDaySolver
 
     public override async Task<string> SolvePartOne()
     {
-        var inputLines = await GetInputLinesAsync();
-
-        PopulatePathTree(inputLines);
-
-        var directories = GetDirectories(FileTree);
-        var sums = directories.Select(CalculateTotalDirectorySize);
+        var sums = await GetDirectorySizesAsync();
 
         return sums.Where(x => x <= 100000).Sum().ToString();
     }
 
-    public override Task<string> SolvePartTwo()
+    public override async Task<string> SolvePartTwo()
     {
-        throw new NotImplementedException();
+        var totalDiskSpace = 70000000;
+        var requiredDiskSpace = 30000000;
+
+        var directorySizes = await GetDirectorySizesAsync();
+        var usedSpace = CalculateTotalDirectorySize(FileTree);
+
+        var unusedSpace = totalDiskSpace - usedSpace;
+
+        return directorySizes.Order().Where(x => (unusedSpace + x) > requiredDiskSpace).First().ToString();
     }
 
     public void ParseInputCommand(string line)
@@ -78,6 +81,16 @@ public sealed class DaySevenSolver : SharedDaySolver
         }
 
         ExecuteTreeNavigation(commandLine.Substring(3));
+    }
+
+    private async Task<IEnumerable<int>> GetDirectorySizesAsync()
+    {
+        var inputLines = await GetInputLinesAsync();
+
+        PopulatePathTree(inputLines);
+
+        var directories = GetDirectories(FileTree);
+        return directories.Select(CalculateTotalDirectorySize);
     }
 
     private void PopulatePathTree(IEnumerable<string> lines)
