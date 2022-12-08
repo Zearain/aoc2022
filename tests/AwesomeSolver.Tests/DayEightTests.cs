@@ -56,6 +56,13 @@ public class DayEightTests
 
         result.Should().Be("21");
     }
+
+    [Test]
+    public void GetScenicScoreShouldReturnExpectedResult()
+    {
+        DayEightSolver.GetScenicScore(DayEightTestData.InputAsArrays, 2, 1).Should().Be(4);
+        DayEightSolver.GetScenicScore(DayEightTestData.InputAsArrays, 2, 3).Should().Be(8);
+    }
 }
 
 internal static class DayEightTestData

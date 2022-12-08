@@ -24,22 +24,51 @@ public sealed class DayEightSolver : SharedDaySolver
 
     public static bool IsTreeVisible(int[][] trees, int posX, int posY)
     {
-        var edgeY = trees.Length - 1;
-        var edgeX = trees[posY].Length - 1;
-        if (new[] { 0, edgeX}.Contains(posX) || new[] {0, edgeY}.Contains(posY))
-            return true;
+        var treesToEdge = GetTreesToEdges(trees, posX, posY);
 
         var treeToCheck = trees[posY][posX];
 
-        var treesLeft = trees[posY].Take(posX);
-        var treesRight = trees[posY].Skip(posX+1);
-        var treesUp = trees.Take(posY).Select(x => x[posX]);
-        var treesDown = trees.Skip(posY+1).Select(x => x[posX]);
+        return treesToEdge.Left.All(x => x < treeToCheck) ||
+            treesToEdge.Right.All(x => x < treeToCheck) ||
+            treesToEdge.Up.All(x => x < treeToCheck) ||
+            treesToEdge.Down.All(x => x < treeToCheck);
+    }
 
-        return treesLeft.All(x => x < treeToCheck) ||
-            treesRight.All(x => x < treeToCheck) || 
-            treesUp.All(x => x < treeToCheck) || 
-            treesDown.All(x => x < treeToCheck);
+    public static int GetScenicScore(int[][] trees, int posX, int posY)
+    {
+        var treesToEdge = GetTreesToEdges(trees, posX, posY);
+        var walkToEdge = new[] {
+            treesToEdge.Left.Reverse(),
+            treesToEdge.Right,
+            treesToEdge.Up.Reverse(),
+            treesToEdge.Down,
+        };
+
+        var treeToCheck = trees[posY][posX];
+
+        var directionScores = new List<int>();
+        foreach(var treesInDirection in walkToEdge)
+        {
+            var directionScore = 0;
+            foreach(var tree in treesInDirection)
+            {
+                directionScore++;
+                if (tree >= treeToCheck) break;
+            }
+            if (directionScore > 0) directionScores.Add(directionScore);
+        }
+
+        return directionScores.Aggregate(1, (a, b) => a * b);
+    }
+
+    private static (int[] Left, int[] Right, int[] Up, int[] Down) GetTreesToEdges(int[][] trees, int posX, int posY)
+    {
+        var treesLeft = trees[posY].Take(posX).ToArray();
+        var treesRight = trees[posY].Skip(posX+1).ToArray();
+        var treesUp = trees.Take(posY).Select(x => x[posX]).ToArray();
+        var treesDown = trees.Skip(posY+1).Select(x => x[posX]).ToArray();
+
+        return (treesLeft, treesRight, treesUp, treesDown);
     }
 
     public override async Task<string> SolvePartOne()
@@ -60,8 +89,21 @@ public sealed class DayEightSolver : SharedDaySolver
         return numVisisble.ToString();
     }
 
-    public override Task<string> SolvePartTwo()
+    public override async Task<string> SolvePartTwo()
     {
-        throw new NotImplementedException();
+        var inputLines = await GetInputLinesAsync();
+
+        var trees = ParseInputLinesAsArrays(inputLines);
+
+        var scenicScore = new List<int>();
+        for (int y = 0; y < trees.Length; y++)
+        {
+            for(int x = 0; x < trees[y].Length; x++)
+            {
+                scenicScore.Add(GetScenicScore(trees, x, y));
+            }
+        }
+
+        return scenicScore.Max().ToString();
     }
 }
