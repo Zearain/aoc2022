@@ -39,8 +39,9 @@ public class DayOneTests
     public async Task Part1()
     {
         var solver = new DayOneSolver(inputProvider);
+        await solver.InitializeAsync();
 
-        var part1Result = await solver.SolvePartOne();
+        var part1Result = await solver.SolvePartOneAsync();
 
         part1Result.Should().Be(partOneSolution);
     }
@@ -49,8 +50,9 @@ public class DayOneTests
     public async Task Part2()
     {
         var solver = new DayOneSolver(inputProvider);
+        await solver.InitializeAsync();
 
-        var part2Result = await solver.SolvePartTwo();
+        var part2Result = await solver.SolvePartTwoAsync();
 
         part2Result.Should().Be(partTwoSolution);
     }

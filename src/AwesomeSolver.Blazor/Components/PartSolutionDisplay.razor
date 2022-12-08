@@ -1,0 +1,67 @@
+<MudExpansionPanel Text="@PartText" IsExpandedChanged="SolutionVisibilityChanged">
+    @if(string.IsNullOrEmpty(Solution)) {
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    }
+    else {
+        <MudText Typo="Typo.h6">@Solution</MudText>
+    }
+</MudExpansionPanel>
+
+@code
+{
+    private int part;
+
+    [CascadingParameter]
+    protected IDaySolver? DaySolver {get; set;}
+
+    [Parameter]
+    public int Part
+    {
+        get => part; 
+        set
+        {
+            part = value;
+            PartText = $"Part {part}";
+        }
+    }
+
+    private string PartText {get; set;} = string.Empty;
+
+    private string Solution {get; set;} = string.Empty;
+
+    private async Task SolutionVisibilityChanged(bool newVal)
+    {
+        if (newVal)
+        {
+            Solution = await SolvePartAsync(part);
+        }
+        else
+        {
+            // Reset after a while to prevent sudden collapse.
+            Task.Delay(350).ContinueWith(t => Solution = string.Empty).AndForget();
+        }
+    }
+
+    private async Task<string> SolvePartAsync(int part)
+    {
+        Task<string>? solverTask = null;
+        switch (part)
+        {
+            case 1:
+                solverTask = DaySolver?.SolvePartOneAsync();
+                break;
+            case 2:
+                solverTask = DaySolver?.SolvePartTwoAsync();
+                break;
+            default:
+                return "Invalid Part Number";
+        }
+
+        if (solverTask is null)
+        {
+            return "Solver Not Provided";
+        }
+
+        return await solverTask;
+    }
+}

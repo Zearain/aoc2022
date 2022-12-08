@@ -1,3 +1,4 @@
+using AwesomeSolver.Core.Attributes;
 using AwesomeSolver.Core.Services;
 using AwesomeSolver.Core.Solvers;
 using FluentAssertions;
@@ -5,7 +6,7 @@ using Moq;
 
 namespace AwesomeSolver.Core.Tests;
 
-public class SharedBaseSolverTests
+public class SharedDaySolverTests
 {
     private readonly string input = @"2-4,6-8
 2-3,4-5
@@ -34,22 +35,26 @@ public class SharedBaseSolverTests
     }
 }
 
+[DaySolver(999)]
 internal class TestSolver : SharedDaySolver
 {
     public TestSolver(IInputProvider inputProvider) : base(inputProvider)
     {
     }
 
-    protected override int DayNumber => 0;
+    public async Task<IEnumerable<string>> GetLinesAsync()
+    {
+        await InitializeAsync();
 
-    public async Task<IEnumerable<string>> GetLinesAsync() => await GetInputLinesAsync();
+        return inputLines;
+    }
 
-    public override Task<string> SolvePartOne()
+    public override Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public override Task<string> SolvePartTwo()
+    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

@@ -10,19 +10,17 @@ public sealed class DayThreeSolver : SharedDaySolver
     {
     }
 
-    protected override int DayNumber => 3;
-
-    public override async Task<string> SolvePartOne()
+    public override Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
-        var elfRucksacks = GetElfRucksacks(await GetInputLinesAsync());
+        var elfRucksacks = GetElfRucksacks(inputLines);
         var duplicates = elfRucksacks.Where(x => x.FirstCompartmentItems.Intersect(x.SecondCompartmentItems).Any()).Select(x => x.FirstCompartmentItems.Intersect(x.SecondCompartmentItems));
 
-        return duplicates.Sum(x => x.Sum()).ToString();
+        return Task.FromResult(duplicates.Sum(x => x.Sum()).ToString());
     }
 
-    public override async Task<string> SolvePartTwo()
+    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
-        var elfRucksacks = GetElfRucksacks(await GetInputLinesAsync()).ToArray();
+        var elfRucksacks = GetElfRucksacks(inputLines).ToArray();
         var badges = new List<int>();
         for (int i = 0; i < elfRucksacks.Length; i += 3)
         {
@@ -30,7 +28,7 @@ public sealed class DayThreeSolver : SharedDaySolver
             badges.Add(elfGroup.SelectMany(x => x.AllItems).GroupBy(x => x).First(x => x.Count() == 3).Key);
         }
 
-        return badges.Sum().ToString();
+        return Task.FromResult(badges.Sum().ToString());
     }
 
     private static int GetCharNumber(char c)

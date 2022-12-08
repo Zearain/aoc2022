@@ -10,8 +10,6 @@ public sealed class DaySixSolver : SharedDaySolver
     {
     }
 
-    protected override int DayNumber => 6;
-
     public static int ParseStartPacketIndex(string input)
     {
         return ParsePacketIndex(input, 4);
@@ -29,17 +27,13 @@ public sealed class DaySixSolver : SharedDaySolver
         return -1;
     }
 
-    public override async Task<string> SolvePartOne()
+    public override Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
-        await GetInputIfNotProvided();
-
-        return ParseStartPacketIndex(input).ToString();
+        return Task.FromResult(ParseStartPacketIndex(input).ToString());
     }
 
-    public override async Task<string> SolvePartTwo()
+    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
-        await GetInputIfNotProvided();
-
-        return ParsePacketIndex(input, 14).ToString();
+        return Task.FromResult(ParsePacketIndex(input, 14).ToString());
     }
 }

@@ -1,3 +1,4 @@
+using AwesomeSolver.Core.Attributes;
 using AwesomeSolver.Core.Services;
 
 namespace AwesomeSolver.Core.Solvers;
@@ -11,25 +12,56 @@ public abstract class SharedDaySolver : IDaySolver
         this.inputProvider = inputProvider;
     }
 
-    protected abstract int DayNumber { get; }
+    protected int DayNumber
+    {
+        get
+        {
+            var dayAttribute = Attribute.GetCustomAttribute(this.GetType(), typeof(DaySolverAttribute)) as DaySolverAttribute;
+            if (dayAttribute is null)
+                throw new NotImplementedException("Day attribute missing");
+            return dayAttribute.Day;
+        }
+    }
 
     protected string input = string.Empty;
+    protected IEnumerable<string> inputLines = Array.Empty<string>();
 
-    protected async Task GetInputIfNotProvided()
+    private async Task GetInputIfNotProvided(CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(input))
         {
             input = await inputProvider.GetInputStringAsync(DayNumber);
+            inputLines = input.Split(Environment.NewLine);
         }
     }
 
-    protected async Task<IEnumerable<string>> GetInputLinesAsync()
+    public void Initialize()
     {
-        await GetInputIfNotProvided();
-
-        return input.Split(Environment.NewLine);
+        InitializeAsync().GetAwaiter().GetResult();
     }
 
-    public abstract Task<string> SolvePartOne();
-    public abstract Task<string> SolvePartTwo();
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
+    {
+        await GetInputIfNotProvided(cancellationToken);
+    }
+
+    public virtual string SolvePartOne()
+    {
+        return SolvePartOneAsync().GetAwaiter().GetResult();
+    }
+
+    public virtual Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult("Not Implemented");
+    }
+
+    public virtual string SolvePartTwo()
+    {
+        return SolvePartTwoAsync().GetAwaiter().GetResult();
+    }
+
+    public virtual Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult("Not Implemented");
+    }
 }

@@ -62,8 +62,9 @@ public class DaySevenTests
     public async Task SolvePartOneShouldReturnExpectedResult()
     {
         var solver = new DaySevenSolver(inputProvider);
+        await solver.InitializeAsync();
 
-        var result = await solver.SolvePartOne();
+        var result = await solver.SolvePartOneAsync();
 
         result.Should().Be("95437");
     }
@@ -72,8 +73,9 @@ public class DaySevenTests
     public async Task SolvePartTwoShouldReturnExpectedResult()
     {
         var solver = new DaySevenSolver(inputProvider);
+        await solver.InitializeAsync();
 
-        var result = await solver.SolvePartTwo();
+        var result = await solver.SolvePartTwoAsync();
 
         result.Should().Be("24933642");
     }

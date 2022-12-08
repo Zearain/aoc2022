@@ -51,8 +51,9 @@ public class DayEightTests
     public async Task SolvePartOneShouldReturnExpectedResult()
     {
         var solver = new DayEightSolver(inputProvider);
+        await solver.InitializeAsync();
 
-        var result = await solver.SolvePartOne();
+        var result = await solver.SolvePartOneAsync();
 
         result.Should().Be("21");
     }

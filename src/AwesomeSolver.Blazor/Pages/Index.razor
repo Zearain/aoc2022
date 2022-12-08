@@ -23,7 +23,7 @@
 </MudContainer>
 
 @code {
-    private (int Day, bool Implemented)[] Days {get; set;}
+    private (int Day, bool Implemented)[] Days {get; set;} = Array.Empty<(int Day, bool Implemented)>();
 
     protected override void OnInitialized()
     {

@@ -6,23 +6,21 @@ namespace AwesomeSolver.Core.Solvers;
 [DaySolver(4)]
 public sealed class DayFourSolver : SharedDaySolver
 {
-    protected override int DayNumber => 4;
-
     public DayFourSolver(IInputProvider inputProvider)
         : base(inputProvider)
     {
     }
 
-    public override async Task<string> SolvePartOne()
+    public override Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
-        var elfPairLines = await this.GetInputLinesAsync();
-        return elfPairLines.Select(ParseElfPairAssignment).Where(x => IsFullOverlap(x.FirstElfAssignment, x.SecondElfAssignment)).Count().ToString();
+        var elfPairLines = inputLines;
+        return Task.FromResult(elfPairLines.Select(ParseElfPairAssignment).Where(x => IsFullOverlap(x.FirstElfAssignment, x.SecondElfAssignment)).Count().ToString());
     }
 
-    public override async Task<string> SolvePartTwo()
+    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
-        var elfPairLines = await this.GetInputLinesAsync();
-        return elfPairLines.Select(ParseElfPairAssignment).Where(x => IsAnyOverlap(x.FirstElfAssignment, x.SecondElfAssignment)).Count().ToString();
+        var elfPairLines = inputLines;
+        return Task.FromResult(elfPairLines.Select(ParseElfPairAssignment).Where(x => IsAnyOverlap(x.FirstElfAssignment, x.SecondElfAssignment)).Count().ToString());
     }
 
     public (Range FirstElfAssignment, Range SecondElfAssignment) ParseElfPairAssignment(string elfPairLine)

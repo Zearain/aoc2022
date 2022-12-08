@@ -10,8 +10,6 @@ public sealed class DayTwoSolver : SharedDaySolver
     {
     }
 
-    protected override int DayNumber => 2;
-
     private static IEnumerable<RPSRound> ParseRPSRounds(IEnumerable<string> inputLines, bool secondColumnResult = false)
     {
         return inputLines.Select(x => x.Split(' ')).Select(x => secondColumnResult ? ParseOpponentResultRound(x[0], x[1]) : ParseOpponentPlayerRound(x[0], x[1]));
@@ -56,18 +54,18 @@ public sealed class DayTwoSolver : SharedDaySolver
         };
     }
 
-    public override async Task<string> SolvePartOne()
+    public override Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
-        var rpsRounds = ParseRPSRounds(await GetInputLinesAsync());
+        var rpsRounds = ParseRPSRounds(inputLines);
 
-        return rpsRounds.Sum(x => x.GetPlayerRoundScore).ToString();
+        return Task.FromResult(rpsRounds.Sum(x => x.GetPlayerRoundScore).ToString());
     }
 
-    public override async Task<string> SolvePartTwo()
+    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
-        var rpsRounds = ParseRPSRounds(await GetInputLinesAsync(), true);
+        var rpsRounds = ParseRPSRounds(inputLines, true);
 
-        return rpsRounds.Sum(x => x.GetPlayerRoundScore).ToString();
+        return Task.FromResult(rpsRounds.Sum(x => x.GetPlayerRoundScore).ToString());
     }
 }
 

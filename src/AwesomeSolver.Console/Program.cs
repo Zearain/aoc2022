@@ -26,8 +26,11 @@ using var scope = serviceProvider.CreateScope();
 var solverFactory = scope.ServiceProvider.GetRequiredService<DaySolverFactory>();
 var daySolver = solverFactory.GetDaySolver(chosenDay);
 
-var part1Solution = await daySolver.SolvePartOne();
+// Initialize input
+await daySolver.InitializeAsync();
+
+var part1Solution = await daySolver.SolvePartOneAsync();
 Console.WriteLine($"DAY {chosenDay}, PART 1: {part1Solution}");
 
-var part2Solution = await daySolver.SolvePartTwo();
+var part2Solution = await daySolver.SolvePartTwoAsync();
 Console.WriteLine($"DAY {chosenDay}, PART 2: {part2Solution}");

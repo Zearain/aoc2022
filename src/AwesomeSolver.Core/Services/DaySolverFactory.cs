@@ -22,10 +22,11 @@ public sealed class DaySolverFactory
 
         dayTypeMapping = typeof(IDaySolver).Assembly.GetTypes()
             .Where(x => typeof(IDaySolver).IsAssignableFrom(x) &&
-                !x.IsInterface && 
+                !x.IsInterface &&
                 !x.IsAbstract &&
                 x.GetCustomAttribute<DaySolverAttribute>() is not null)
-            .ToDictionary(x => x.GetCustomAttribute<DaySolverAttribute>().Day);
+            .ToDictionary(x => x.GetCustomAttribute<DaySolverAttribute>()?.Day ??
+                throw new NullReferenceException("DaySolverAttribute can never be null here"));
 
         logger.LogInformation("DaySolverFactory initialized. Found {days} implemented IDaySolvers.", ImplmentedDaySolvers.Length);
     }
@@ -36,7 +37,7 @@ public sealed class DaySolverFactory
             throw new ArgumentOutOfRangeException(nameof(day));
 
         var dayType = dayTypeMapping[day];
-        
+
         return (IDaySolver)serviceProvider.GetRequiredService(dayType);
     }
 }

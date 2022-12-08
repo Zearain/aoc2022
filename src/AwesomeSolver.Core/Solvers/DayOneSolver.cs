@@ -10,22 +10,18 @@ public sealed class DayOneSolver : SharedDaySolver
     {
     }
 
-    protected override int DayNumber => 1;
-
-    public override async Task<string> SolvePartOne()
+    public override Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
-        await GetInputIfNotProvided();
         var parsedCaloriesPerElf = GetElfSeparatedCalories(input);
-
-        return parsedCaloriesPerElf.Max(x => x.Sum()).ToString();
+        var result = parsedCaloriesPerElf.Max(x => x.Sum()).ToString();
+        return Task.FromResult(result);
     }
 
-    public override async Task<string> SolvePartTwo()
+    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
-        await GetInputIfNotProvided();
         var orderedCaloriesPerElf = GetElfSeparatedCalories(input).OrderByDescending(x => x.Sum());
-
-        return orderedCaloriesPerElf.Select(x => x.Sum()).Take(3).Sum().ToString();
+        var result = orderedCaloriesPerElf.Select(x => x.Sum()).Take(3).Sum().ToString();
+        return Task.FromResult(result);
     }
 
     private IEnumerable<IEnumerable<int>> GetElfSeparatedCalories(string input)

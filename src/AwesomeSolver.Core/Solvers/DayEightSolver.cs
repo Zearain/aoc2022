@@ -10,8 +10,6 @@ public sealed class DayEightSolver : SharedDaySolver
     {
     }
 
-    protected override int DayNumber => 8;
-
     public static int[] ParseLineAsArray(string line)
     {
         return line.Select(x => int.Parse(x.ToString())).ToArray();
@@ -71,10 +69,8 @@ public sealed class DayEightSolver : SharedDaySolver
         return (treesLeft, treesRight, treesUp, treesDown);
     }
 
-    public override async Task<string> SolvePartOne()
+    public override Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
-        var inputLines = await GetInputLinesAsync();
-
         var trees = ParseInputLinesAsArrays(inputLines);
 
         var numVisisble = 0;
@@ -86,13 +82,11 @@ public sealed class DayEightSolver : SharedDaySolver
             }
         }
 
-        return numVisisble.ToString();
+        return Task.FromResult(numVisisble.ToString());
     }
 
-    public override async Task<string> SolvePartTwo()
+    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
-        var inputLines = await GetInputLinesAsync();
-
         var trees = ParseInputLinesAsArrays(inputLines);
 
         var scenicScore = new List<int>();
@@ -104,6 +98,6 @@ public sealed class DayEightSolver : SharedDaySolver
             }
         }
 
-        return scenicScore.Max().ToString();
+        return Task.FromResult(scenicScore.Max().ToString());
     }
 }

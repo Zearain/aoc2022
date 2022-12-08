@@ -21,6 +21,7 @@ public class DayFiveTests
     public async Task GetInputSectionsAsyncShouldReturnTwoStrings()
     {
         var solver = new DayFiveSolver(inputProvider);
+        await solver.InitializeAsync();
 
         var sections = await solver.GetInputSectionsAsync();
         sections.Should().HaveCount(2);
@@ -66,8 +67,9 @@ public class DayFiveTests
     public async Task SolvePartOneShouldReturnExpectedResult()
     {
         var solver = new DayFiveSolver(inputProvider);
+        await solver.InitializeAsync();
 
-        var result = await solver.SolvePartOne();
+        var result = await solver.SolvePartOneAsync();
         result.Should().Be("CMZ");
     }
 
@@ -81,8 +83,9 @@ public class DayFiveTests
     public async Task SolvePartTwoShouldReturnExpectedResult()
     {
         var solver = new DayFiveSolver(inputProvider);
+        await solver.InitializeAsync();
 
-        var result = await solver.SolvePartTwo();
+        var result = await solver.SolvePartTwoAsync();
         result.Should().Be("MCD");
     }
 }

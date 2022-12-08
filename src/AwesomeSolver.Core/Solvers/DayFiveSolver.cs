@@ -11,9 +11,7 @@ public sealed class DayFiveSolver : SharedDaySolver
     {
     }
 
-    protected override int DayNumber => 5;
-
-    public override async Task<string> SolvePartOne()
+    public override async Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
         var sections = await GetInputSectionsAsync();
 
@@ -28,7 +26,7 @@ public sealed class DayFiveSolver : SharedDaySolver
         return string.Concat(crates.Select(x => x.Peek()));
     }
 
-    public override async Task<string> SolvePartTwo()
+    public override async Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
         var sections = await GetInputSectionsAsync();
 
@@ -43,11 +41,9 @@ public sealed class DayFiveSolver : SharedDaySolver
         return string.Concat(crates.Select(x => x.Peek()));
     }
 
-    public async Task<string[]> GetInputSectionsAsync()
+    public Task<string[]> GetInputSectionsAsync()
     {
-        await GetInputIfNotProvided();
-
-        return input.Split(Environment.NewLine + Environment.NewLine);
+        return Task.FromResult(input.Split(Environment.NewLine + Environment.NewLine));
     }
 
     public int ParseCrateStackNumber(string crateSectionInput)
