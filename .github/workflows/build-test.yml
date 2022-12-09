@@ -20,7 +20,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
 
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore tests/AwesomeSolver.Core.Tests/AwesomeSolver.Core.Tests.csproj
 
       - name: Build
         run: dotnet build tests/AwesomeSolver.Core.Tests/AwesomeSolver.Core.Tests.csproj --configuration Release --no-restore
