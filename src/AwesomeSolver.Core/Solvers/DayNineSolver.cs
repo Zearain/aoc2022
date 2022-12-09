@@ -86,10 +86,10 @@ public sealed class DayNineSolver : SharedDaySolver
     private void ProcessRopeMovement(Direction direction)
     {
         knotPositions[0] = MoveInDirection(knotPositions[0], direction);
-        ProcessTrailingKnots(1);
+        ProcessTrailingKnots();
     }
 
-    private void ProcessTrailingKnots(int knotIndex)
+    private void ProcessTrailingKnots(int knotIndex = 1)
     {
         if (knotIndex >= knotPositions.Length) return;
 
