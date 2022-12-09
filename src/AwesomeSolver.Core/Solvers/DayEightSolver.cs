@@ -53,7 +53,7 @@ public sealed class DayEightSolver : SharedDaySolver
                 directionScore++;
                 if (tree >= treeToCheck) break;
             }
-            if (directionScore > 0) directionScores.Add(directionScore);
+            directionScores.Add(directionScore);
         }
 
         return directionScores.Aggregate(1, (a, b) => a * b);

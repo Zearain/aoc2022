@@ -33,9 +33,7 @@ public class DayFiveTests
     [Test]
     public void ParseNumberOfCrateStacksShouldReturnThree()
     {
-        var solver = new DayFiveSolver(inputProvider);
-
-        var result = solver.ParseCrateStackNumber(DayFiveTestData.InputCraneSection);
+        var result = DayFiveSolver.ParseCrateStackNumber(DayFiveTestData.InputCraneSection);
         result.Should().Be(3);
     }
 
@@ -63,30 +61,10 @@ public class DayFiveTests
         return DayFiveSolver.ProcessMoveInstruction(initialStacks, moveInstruction);
     }
 
-    [Test]
-    public async Task SolvePartOneShouldReturnExpectedResult()
-    {
-        var solver = new DayFiveSolver(inputProvider);
-        await solver.InitializeAsync();
-
-        var result = await solver.SolvePartOneAsync();
-        result.Should().Be("CMZ");
-    }
-
     [TestCaseSource(typeof(DayFiveTestData), nameof(DayFiveTestData.CrateMover9001MoveCases))]
     public Stack<char>[] ProcessCrateMover9001MoveShouldReturnExpectedStacks(Stack<char>[] initialStacks, MoveInstruction moveInstruction)
     {
         return DayFiveSolver.ProcessCrateMover9001Move(initialStacks, moveInstruction);
-    }
-
-    [Test]
-    public async Task SolvePartTwoShouldReturnExpectedResult()
-    {
-        var solver = new DayFiveSolver(inputProvider);
-        await solver.InitializeAsync();
-
-        var result = await solver.SolvePartTwoAsync();
-        result.Should().Be("MCD");
     }
 }
 

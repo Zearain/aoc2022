@@ -7,16 +7,6 @@ namespace AwesomeSolver.Core.Tests;
 
 public class DayEightTests
 {
-    private IInputProvider inputProvider = null!;
-
-    [SetUp]
-    public void Setup()
-    {
-        var mockInputProvider = new Mock<IInputProvider>();
-        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(DayEightTestData.Input);
-        inputProvider = mockInputProvider.Object;
-    }
-
     [TestCaseSource(typeof(DayEightTestData), nameof(DayEightTestData.ParseLineAsArrayTestCases))]
     public int[] ParseLineAsArrayShouldReturnExpectedResult(string line)
     {
@@ -45,17 +35,6 @@ public class DayEightTests
         var trees = DayEightTestData.InputAsArrays;
 
         return DayEightSolver.IsTreeVisible(trees, posX, posY);
-    }
-
-    [Test]
-    public async Task SolvePartOneShouldReturnExpectedResult()
-    {
-        var solver = new DayEightSolver(inputProvider);
-        await solver.InitializeAsync();
-
-        var result = await solver.SolvePartOneAsync();
-
-        result.Should().Be("21");
     }
 
     [Test]

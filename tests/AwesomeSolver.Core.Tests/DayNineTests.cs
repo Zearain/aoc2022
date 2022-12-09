@@ -7,16 +7,6 @@ namespace AwesomeSolver.Tests;
 
 public class DayNineTests
 {
-    private IInputProvider inputProvider = null!;
-
-    [SetUp]
-    public void Setup()
-    {
-        var mockInputProvider = new Mock<IInputProvider>();
-        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(DayNineTestData.Input);
-        inputProvider = mockInputProvider.Object;
-    }
-
     [TestCaseSource(typeof(DayNineTestData), nameof(DayNineTestData.ParseMoveInputTestCases))]
     public RopeMovement ParseMoveInputShouldReturnExpectedResult(string inputLine)
     {
@@ -33,36 +23,6 @@ public class DayNineTests
     public bool IsRopePositionsTouchingShouldReturnExpectedResult(KnotPosition position, KnotPosition other)
     {
         return DayNineSolver.IsRopePositionsTouching(position, other);
-    }
-
-    [Test]
-    public async Task SolvePartOneAsyncShouldReturnExpectedResult()
-    {
-        var solver = new DayNineSolver(inputProvider);
-        await solver.InitializeAsync();
-
-        var result = await solver.SolvePartOneAsync();
-        result.Should().Be("13");
-    }
-
-    [Test]
-    public async Task SolvePartTwoAsyncShouldReturnExpectedResult()
-    {
-        var mockInputProvider = new Mock<IInputProvider>();
-        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(@"R 5
-U 8
-L 8
-D 3
-R 17
-D 10
-L 25
-U 20");
-
-        var solver = new DayNineSolver(mockInputProvider.Object);
-        await solver.InitializeAsync();
-
-        var result = solver.SolvePartTwo();
-        result.Should().Be("36");
     }
 }
 

@@ -46,7 +46,7 @@ public sealed class DayFiveSolver : SharedDaySolver
         return Task.FromResult(input.Split(Environment.NewLine + Environment.NewLine));
     }
 
-    public int ParseCrateStackNumber(string crateSectionInput)
+    public static int ParseCrateStackNumber(string crateSectionInput)
     {
         var inputLines = crateSectionInput.Split(Environment.NewLine);
         return inputLines.Last().Split("  ").Length;

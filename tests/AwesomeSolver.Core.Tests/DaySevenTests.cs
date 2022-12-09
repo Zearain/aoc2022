@@ -57,28 +57,6 @@ public class DaySevenTests
 
         result.Should().HaveSameCount(expectedDirectories);
     }
-
-    [Test]
-    public async Task SolvePartOneShouldReturnExpectedResult()
-    {
-        var solver = new DaySevenSolver(inputProvider);
-        await solver.InitializeAsync();
-
-        var result = await solver.SolvePartOneAsync();
-
-        result.Should().Be("95437");
-    }
-
-    [Test]
-    public async Task SolvePartTwoShouldReturnExpectedResult()
-    {
-        var solver = new DaySevenSolver(inputProvider);
-        await solver.InitializeAsync();
-
-        var result = await solver.SolvePartTwoAsync();
-
-        result.Should().Be("24933642");
-    }
 }
 
 internal static class DaySevenTestData

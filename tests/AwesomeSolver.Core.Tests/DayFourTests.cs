@@ -7,59 +7,24 @@ namespace AwesomeSolver.Core.Tests;
 
 public class DayFourTests
 {
-    private IInputProvider inputProvider = null!;
-
-    private readonly string partOneSolution = "2";
-    private readonly string partTwoSolution = "4";
-
-    [SetUp]
-    public void Setup()
-    {
-        var mockInputProvider = new Mock<IInputProvider>();
-        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(DayFourTestData.Input);
-        inputProvider = mockInputProvider.Object;
-    }
-
-    [Test]
-    public async Task Part1()
-    {
-        var solver = new DayFourSolver(inputProvider);
-        await solver.InitializeAsync();
-
-        var part1Result = await solver.SolvePartOneAsync();
-
-        part1Result.Should().Be(partOneSolution);
-    }
-
-    [Test]
-    public async Task Part2()
-    {
-        var solver = new DayFourSolver(inputProvider);
-        await solver.InitializeAsync();
-
-        var part2Result = await solver.SolvePartTwoAsync();
-
-        part2Result.Should().Be(partTwoSolution);
-    }
-
     [TestCaseSource(typeof(DayFourTestData), nameof(DayFourTestData.ParseElfAssignementCases))]
     public (System.Range FirstElfAssignment, System.Range SecondElfAssignemnt) ParseElfPairAssignementsShouldReturnExpectedResult(string elfPairLine)
     {
-        var solver = new DayFourSolver(inputProvider);
+        var solver = new DayFourSolver(new Mock<IInputProvider>().Object);
         return solver.ParseElfPairAssignment(elfPairLine);
     }
 
     [TestCaseSource(typeof(DayFourTestData), nameof(DayFourTestData.IsRangeFullOverlapCases))]
     public bool IsFullOverlapShouldReturnExpectedResult(System.Range firstRange, System.Range secondRange)
     {
-        var solver = new DayFourSolver(inputProvider);
+        var solver = new DayFourSolver(new Mock<IInputProvider>().Object);
         return solver.IsFullOverlap(firstRange, secondRange);
     }
 
     [TestCaseSource(typeof(DayFourTestData), nameof(DayFourTestData.IsRangeAnyOverlapCases))]
     public bool IsAnyOverlapShouldReturnExpectedResult(System.Range firstRange, System.Range secondRange)
     {
-        var solver = new DayFourSolver(inputProvider);
+        var solver = new DayFourSolver(new Mock<IInputProvider>().Object);
         return solver.IsAnyOverlap(firstRange, secondRange);
     }
 }
