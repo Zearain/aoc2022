@@ -33,5 +33,5 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: .NET ${{ matrix.dotnet-version }} Tests
-          path: TestResults-${{ matrix.dotnet-version }}
+          path: TestResults-${{ matrix.dotnet-version }}/*.trx
           reporter: dotnet-trx
