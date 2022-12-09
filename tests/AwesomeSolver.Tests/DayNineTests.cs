@@ -24,13 +24,13 @@ public class DayNineTests
     }
 
     [TestCaseSource(typeof(DayNineTestData), nameof(DayNineTestData.MoveInDirectionTestCases))]
-    public RopePosition MoveInDirectionShouldReturnExpectedResult(RopePosition start, Direction direction)
+    public KnotPosition MoveInDirectionShouldReturnExpectedResult(KnotPosition start, Direction direction)
     {
         return DayNineSolver.MoveInDirection(start, direction);
     }
 
     [TestCaseSource(typeof(DayNineTestData), nameof(DayNineTestData.IsRopePositionsTouchingTestCases))]
-    public bool IsRopePositionsTouchingShouldReturnExpectedResult(RopePosition position, RopePosition other)
+    public bool IsRopePositionsTouchingShouldReturnExpectedResult(KnotPosition position, KnotPosition other)
     {
         return DayNineSolver.IsRopePositionsTouching(position, other);
     }
@@ -43,6 +43,26 @@ public class DayNineTests
 
         var result = await solver.SolvePartOneAsync();
         result.Should().Be("13");
+    }
+
+    [Test]
+    public async Task SolvePartTwoAsyncShouldReturnExpectedResult()
+    {
+        var mockInputProvider = new Mock<IInputProvider>();
+        mockInputProvider.Setup(x => x.GetInputStringAsync(It.IsAny<int>())).ReturnsAsync(@"R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20");
+
+        var solver = new DayNineSolver(mockInputProvider.Object);
+        await solver.InitializeAsync();
+
+        var result = solver.SolvePartTwo();
+        result.Should().Be("36");
     }
 }
 
@@ -72,10 +92,10 @@ R 2";
     {
         get
         {
-            yield return new TestCaseData(new RopePosition(10, 10), Direction.Right).Returns(new RopePosition(11, 10));
-            yield return new TestCaseData(new RopePosition(10, 10), Direction.Up).Returns(new RopePosition(10, 11));
-            yield return new TestCaseData(new RopePosition(10, 10), Direction.Left).Returns(new RopePosition(9, 10));
-            yield return new TestCaseData(new RopePosition(10, 10), Direction.Down).Returns(new RopePosition(10, 9));
+            yield return new TestCaseData(new KnotPosition(10, 10), Direction.Right).Returns(new KnotPosition(11, 10));
+            yield return new TestCaseData(new KnotPosition(10, 10), Direction.Up).Returns(new KnotPosition(10, 11));
+            yield return new TestCaseData(new KnotPosition(10, 10), Direction.Left).Returns(new KnotPosition(9, 10));
+            yield return new TestCaseData(new KnotPosition(10, 10), Direction.Down).Returns(new KnotPosition(10, 9));
         }
     }
 
@@ -83,19 +103,19 @@ R 2";
     {
         get
         {
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(10, 10)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(11, 10)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(10, 11)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(9, 10)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(10, 9)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(11, 11)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(9, 9)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(9, 11)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(11, 9)).Returns(true);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(12, 10)).Returns(false);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(10, 12)).Returns(false);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(8, 10)).Returns(false);
-            yield return new TestCaseData(new RopePosition(10, 10), new RopePosition(10, 8)).Returns(false);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(10, 10)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(11, 10)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(10, 11)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(9, 10)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(10, 9)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(11, 11)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(9, 9)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(9, 11)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(11, 9)).Returns(true);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(12, 10)).Returns(false);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(10, 12)).Returns(false);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(8, 10)).Returns(false);
+            yield return new TestCaseData(new KnotPosition(10, 10), new KnotPosition(10, 8)).Returns(false);
         }
     }
 }

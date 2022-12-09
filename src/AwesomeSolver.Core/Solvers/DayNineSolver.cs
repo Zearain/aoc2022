@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using AwesomeSolver.Core.Attributes;
 using AwesomeSolver.Core.Services;
 
@@ -6,7 +7,7 @@ namespace AwesomeSolver.Core.Solvers;
 [DaySolver(9)]
 public sealed class DayNineSolver : SharedDaySolver
 {
-    private static readonly IDictionary<Direction, RopePosition> MoveAddition = new Dictionary<Direction, RopePosition>
+    private static readonly IDictionary<Direction, KnotPosition> MoveAddition = new Dictionary<Direction, KnotPosition>
     {
         { Direction.Right, new(1, 0) },
         { Direction.Up, new(0, 1) },
@@ -14,12 +15,8 @@ public sealed class DayNineSolver : SharedDaySolver
         { Direction.Down, new(0, -1) },
     };
 
-    private RopePosition headPosition = new(0,0);
-    private RopePosition tailPosition = new(0,0);
-    private readonly HashSet<RopePosition> tailVisitedPositions = new HashSet<RopePosition>
-    {
-        new(0,0),
-    };
+    private KnotPosition[] knotPositions = null!;
+    private readonly HashSet<KnotPosition> visitedLastKnotPosistions = new HashSet<KnotPosition>();
 
     public DayNineSolver(IInputProvider inputProvider) : base(inputProvider)
     {
@@ -38,12 +35,12 @@ public sealed class DayNineSolver : SharedDaySolver
         };
     }
 
-    public static RopePosition MoveInDirection(RopePosition start, Direction direction)
+    public static KnotPosition MoveInDirection(KnotPosition start, Direction direction)
     {
         return start + MoveAddition[direction];
     }
 
-    public static bool IsRopePositionsTouching(RopePosition position, RopePosition other)
+    public static bool IsRopePositionsTouching(KnotPosition position, KnotPosition other)
     {
         var distance = Math.Sqrt(((other.X - position.X) * (other.X - position.X)) +
                                 ((other.Y - position.Y) * (other.Y - position.Y)));
@@ -52,47 +49,77 @@ public sealed class DayNineSolver : SharedDaySolver
 
     public override Task<string> SolvePartOneAsync(CancellationToken cancellationToken = default)
     {
-        Reset();
+        var result = GetLastKnotPositionsForRopeLength(2).ToString();
+        return Task.FromResult(result);
+    }
+
+    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
+    {
+        var result = GetLastKnotPositionsForRopeLength(10).ToString();
+        return Task.FromResult(result);
+    }
+
+    private int GetLastKnotPositionsForRopeLength(int ropeLength)
+    {
+        CreateRope(ropeLength);
 
         foreach(var movement in inputLines.Select(ParseMoveInput))
         {
             var movesRemaining = movement.Moves;
             while(movesRemaining > 0)
             {
-                var startHeadPosition = headPosition;
-                headPosition = MoveInDirection(headPosition, movement.Direction);
-                if (!IsRopePositionsTouching(headPosition, tailPosition))
-                {
-                    tailPosition = startHeadPosition;
-                    tailVisitedPositions.Add(tailPosition);
-                }
+                ProcessRopeMovement(movement.Direction);
                 movesRemaining--;
             }
         }
 
-        var result = tailVisitedPositions.Count.ToString();
-        return Task.FromResult(result);
+        return visitedLastKnotPosistions.Count;
     }
 
-    public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
+    private void CreateRope(int numberOfKnots)
     {
-        return base.SolvePartTwoAsync(cancellationToken);
+        knotPositions = Enumerable.Repeat<KnotPosition>(new(0,0), numberOfKnots).ToArray();
+        visitedLastKnotPosistions.Clear();
+        visitedLastKnotPosistions.Add(knotPositions.Last());
     }
 
-    private void Reset()
+    private void ProcessRopeMovement(Direction direction)
     {
-        headPosition = new(0,0);
-        tailPosition = new(0,0);
-        tailVisitedPositions.Clear();
-        tailVisitedPositions.Add(tailPosition);
+        knotPositions[0] = MoveInDirection(knotPositions[0], direction);
+        ProcessTrailingKnots(1);
+    }
+
+    private void ProcessTrailingKnots(int knotIndex)
+    {
+        if (knotIndex >= knotPositions.Length) return;
+
+        if (!IsRopePositionsTouching(knotPositions[knotIndex-1], knotPositions[knotIndex]))
+        {
+            var direction = knotPositions[knotIndex-1] - knotPositions[knotIndex];
+            var movement = new KnotPosition(Math.Clamp(direction.X, -1, 1), Math.Clamp(direction.Y, -1, 1));
+            knotPositions[knotIndex] = knotPositions[knotIndex] + movement;
+
+            if (knotIndex < knotPositions.Length)
+                ProcessTrailingKnots(++knotIndex);
+            if (knotIndex == knotPositions.Length)
+                visitedLastKnotPosistions.Add(knotPositions.Last());
+        }
     }
 }
 
 public sealed record RopeMovement(Direction Direction, int Moves);
-public sealed record RopePosition(int X, int Y)
+public sealed record KnotPosition(int X, int Y)
 {
-    public static RopePosition operator +(RopePosition a, RopePosition b)
+    public static KnotPosition operator +(KnotPosition a, KnotPosition b)
         => new(a.X + b.X, a.Y + b.Y);
+
+    public static KnotPosition operator -(KnotPosition a, KnotPosition b)
+        => new(a.X - b.X, a.Y - b.Y);
+
+    public override string ToString()
+    {
+        return $"({X}, {Y})";
+    }
 }
 
 public enum Direction
