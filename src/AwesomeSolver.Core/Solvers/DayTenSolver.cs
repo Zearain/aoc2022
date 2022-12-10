@@ -28,6 +28,10 @@ public sealed class DayTenSolver : SharedDaySolver
 
     public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
-        return base.SolvePartTwoAsync(cancellationToken);
+        var stateMachine = new SignalStrengthStateMachine(inputLines);
+
+        stateMachine.Run();
+
+        return Task.FromResult(stateMachine.GetScreenImage());
     }
 }

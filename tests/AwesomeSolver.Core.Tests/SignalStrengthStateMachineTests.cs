@@ -84,6 +84,16 @@ public class SignalStrengthStateMachineTests
         stateMachine.GetSignalStrengthAtCycle(cycle).Should().Be(expected);
     }
 
+    [Test]
+    public void GetScreenImageShouldReturnExpectedResultWhenRunWithLargeInput()
+    {
+        var stateMachine = new SignalStrengthStateMachine(LargeInput.Split(Environment.NewLine));
+
+        stateMachine.Run();
+
+        stateMachine.GetScreenImage().Should().Be(ExpectedCrtImage);
+    }
+
     private static string LargeInput = @"addx 15
 addx -11
 addx 6
@@ -230,4 +240,11 @@ addx -11
 noop
 noop
 noop";
+
+    private static string ExpectedCrtImage => @"##..##..##..##..##..##..##..##..##..##..
+###...###...###...###...###...###...###.
+####....####....####....####....####....
+#####.....#####.....#####.....#####.....
+######......######......######......####
+#######.......#######.......#######.....";
 }

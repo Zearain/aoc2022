@@ -33,6 +33,11 @@ public class ImplementedDaySolverTests
     [TestCaseSource(nameof(ImplementedDayTestCases))]
     public async Task DaySolver_SolvePartOneAsync_ShouldReturnExpectedResult(int day)
     {
+        if (ImplementedDayTestData.TestData[day].Expected[0].Equals("SKIP_TEST()"))
+        {
+            Assert.Ignore();
+        }
+
         // Arrange
         using var testScope = serviceProvider.CreateScope();
         var inputProvider = (ImplementedDayTestInputProvider)testScope.ServiceProvider.GetRequiredService<IInputProvider>();
@@ -52,6 +57,11 @@ public class ImplementedDaySolverTests
     [TestCaseSource(nameof(ImplementedDayTestCases))]
     public async Task DaySolver_SolvePartTwoAsync_ShouldReturnExpectedResult(int day)
     {
+        if (ImplementedDayTestData.TestData[day].Expected[1].Equals("SKIP_TEST()"))
+        {
+            Assert.Ignore();
+        }
+
         // Arrange
         using var testScope = serviceProvider.CreateScope();
         var inputProvider = (ImplementedDayTestInputProvider)testScope.ServiceProvider.GetRequiredService<IInputProvider>();
@@ -368,7 +378,7 @@ addx -11
 noop
 noop
 noop"
-            }, new[] { "13140", "NAN" })
+            }, new[] { "13140", "SKIP_TEST()" })
         }
     };
 }

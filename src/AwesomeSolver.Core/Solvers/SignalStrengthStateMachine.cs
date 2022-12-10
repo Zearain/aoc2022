@@ -2,6 +2,9 @@ namespace AwesomeSolver.Core.Solvers;
 
 public sealed class SignalStrengthStateMachine
 {
+    const int crtHeight = 6;
+    const int crtWidth = 40;
+
     private Stack<string> remainingInstructions = new Stack<string>();
     private string currentInstruction = string.Empty;
     private byte executionTime = 0;
@@ -9,6 +12,8 @@ public sealed class SignalStrengthStateMachine
     private int xRegister = 1;
     private List<int> xValues = new List<int>();
     private int currentCycle = 0;
+
+    private char[,] crtScreen = new char[crtHeight,crtWidth];
 
     public SignalStrengthStateMachine()
     {
@@ -65,6 +70,13 @@ public sealed class SignalStrengthStateMachine
             if (currentInstruction == string.Empty && remainingInstructions.Count < 1) return;
             if (currentInstruction == string.Empty) ParseInstruction(remainingInstructions.Pop());
 
+            
+            // CRT Drawing
+            var xCoverValues = new[] { xRegister, xRegister+1, xRegister-1 };
+            var row = (int)(currentCycle / crtWidth);
+            var column = currentCycle % crtWidth;
+            crtScreen[row, column] = xCoverValues.Contains(column) ? '#' : '.';
+
             // The cycle
             currentCycle++;
             xValues.Add(XRegister);
@@ -77,5 +89,20 @@ public sealed class SignalStrengthStateMachine
     public int GetSignalStrengthAtCycle(int cycle)
     {
         return xValues[cycle-1] * cycle;
+    }
+
+    public string GetScreenImage()
+    {
+        var rows = new string[crtHeight];
+        for (int y = 0; y < crtHeight; y++)
+        {
+            var columns = new char[crtWidth];
+            for (int x = 0; x < crtWidth; x++)
+            {
+                columns[x] = crtScreen[y,x];
+            }
+            rows[y] = columns is null ? string.Empty : new string(columns);
+        }
+        return string.Join(Environment.NewLine, rows);
     }
 }
