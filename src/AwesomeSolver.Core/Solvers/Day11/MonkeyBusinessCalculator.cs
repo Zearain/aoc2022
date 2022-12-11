@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace AwesomeSolver.Core.Solvers.Day11;
 
 public sealed class MonkeyBusinessCalculator
@@ -33,7 +35,7 @@ public sealed class MonkeyBusinessCalculator
         }
     }
 
-    private void ThrowToMonkey(int target, long item)
+    private void ThrowToMonkey(int target, BigInteger item)
     {
         monkeyThieves[target].ReceiveItem(item);
     }
@@ -41,9 +43,9 @@ public sealed class MonkeyBusinessCalculator
 
 public sealed class MonkeyThief
 {
-    public delegate void ThrowToMonkeyDelegate(int target, long item);
+    public delegate void ThrowToMonkeyDelegate(int target, BigInteger item);
 
-    private readonly Queue<long> items = new Queue<long>();
+    private readonly Queue<BigInteger> items = new Queue<BigInteger>();
     private readonly string evalString = string.Empty;
     private readonly MonkeyTargetParameters targetParameters;
     private readonly bool divideByThreeAfterEval = true;
@@ -71,7 +73,7 @@ public sealed class MonkeyThief
         this.divideByThreeAfterEval = divideByThreeAfterEval;
     }
 
-    public IEnumerable<long> Items => items;
+    public IEnumerable<BigInteger> Items => items;
 
     public string EvalString => evalString;
 
@@ -79,7 +81,7 @@ public sealed class MonkeyThief
 
     public long InspectedItemsCount => inspectedItemsCount;
 
-    public static long GetOperationValue(long currentItem, string opInput)
+    public static BigInteger GetOperationValue(BigInteger currentItem, string opInput)
     {
         if (long.TryParse(opInput.Trim(), out var value))
         {
@@ -90,7 +92,7 @@ public sealed class MonkeyThief
         return currentItem;
     }
 
-    public static long EvaluateItem(long itemValue, string operation)
+    public static BigInteger EvaluateItem(BigInteger itemValue, string operation)
     {
         var splitOp = operation.Split(' ');
         var a = GetOperationValue(itemValue, splitOp[0]);
@@ -106,7 +108,7 @@ public sealed class MonkeyThief
         };
     }
 
-    public void ReceiveItem(long itemValue)
+    public void ReceiveItem(BigInteger itemValue)
     {
         items.Enqueue(itemValue);
     }
@@ -119,7 +121,7 @@ public sealed class MonkeyThief
         }
     }
 
-    private void InspectAndThrowItem(long itemValue, ThrowToMonkeyDelegate handler)
+    private void InspectAndThrowItem(BigInteger itemValue, ThrowToMonkeyDelegate handler)
     {
         var evaluatedItem = EvaluateItem(itemValue, evalString);
 
@@ -129,7 +131,7 @@ public sealed class MonkeyThief
             evaluatedItem = evaluatedItem / 3;
         }
 
-        if (evaluatedItem % (long)targetParameters.DivisibleBy == 0)
+        if (evaluatedItem % targetParameters.DivisibleBy == 0)
         {
             handler(targetParameters.TrueTarget, evaluatedItem);
         }
