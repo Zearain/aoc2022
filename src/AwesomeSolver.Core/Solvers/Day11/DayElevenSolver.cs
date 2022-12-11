@@ -23,6 +23,12 @@ public sealed class DayElevenSolver : SharedDaySolver
 
     public override Task<string> SolvePartTwoAsync(CancellationToken cancellationToken = default)
     {
-        return base.SolvePartTwoAsync(cancellationToken);
+        var monkeyBusinessCalculator = new MonkeyBusinessCalculator(input, false);
+
+        monkeyBusinessCalculator.RunRounds(10000);
+
+        var monkeyBusiness = monkeyBusinessCalculator.GetMonkeyBusinessLevel(2);
+
+        return Task.FromResult(monkeyBusiness.ToString());
     }
 }

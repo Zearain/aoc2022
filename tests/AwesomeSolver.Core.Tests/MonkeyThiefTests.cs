@@ -25,9 +25,9 @@ public class MonkeyThiefTests
     [TestCase(19, "19", 19)]
     public void GetOperationValueShouldReturnExpectedResult(int currentItem, string opInput, int expected)
     {
-        var result = MonkeyThief.GetOperationValue(currentItem, opInput);
+        var result = MonkeyThief.GetOperationValue((long)currentItem, opInput);
 
-        result.Should().Be(expected);
+        result.Should().Be((long)expected);
     }
 
     [TestCase(79, "old * 19", 1501)]
@@ -35,9 +35,9 @@ public class MonkeyThiefTests
     [TestCase(79, "old * old", 6241)]
     public void EvaluateItemShouldReturnExpectedResult(int currentItem, string evalOperation, int expected)
     {
-        var result = MonkeyThief.EvaluateItem(currentItem, evalOperation);
+        var result = MonkeyThief.EvaluateItem((long)currentItem, evalOperation);
 
-        result.Should().Be(expected);
+        result.Should().Be((long)expected);
     }
 
     [Test]
@@ -73,7 +73,7 @@ public class MonkeyThiefTests
     public void InspectAndThrowItemsShouldCallThrowItemDelegateWithExpectedValues()
     {
         var expected = new[] { (3, 500), (3, 620) };
-        var result = new List<(int, int)>();
+        var result = new List<(int, long)>();
 
         var monkey = new MonkeyThief(input);
         
@@ -87,7 +87,7 @@ public class MonkeyThiefTests
     {
         var monkey = new MonkeyThief(input);
         
-        monkey.InspectAndThrowItems((target, item) => Console.WriteLine($"throw: {target}, {item}"));
+        monkey.InspectAndThrowItems((target, item) => {});
 
         monkey.InspectedItemsCount.Should().Be(2);
     }
@@ -122,6 +122,29 @@ public class MonkeyBusinessCalculatorTests
         calculator.RunRounds(20);
 
         calculator.GetMonkeyBusinessLevel(2).Should().Be(10605);
+    }
+
+    [TestCase(1, new[] { 2, 4, 3, 6 })]
+    [TestCase(20, new[] { 99, 97, 8, 103 })]
+    [TestCase(1000, new[] { 5204, 4729, 199, 5192 })]
+    [TestCase(10000, new[] { 52166, 47830, 1938, 52013 })]
+    public void MonkeyActivityShouldReturnExpectedResultWithNonDivideAfterRounds(int numberOfRounds, IEnumerable<int> expected)
+    {
+        var calculator = new MonkeyBusinessCalculator(MonkeyBusinessTestData.Input, false);
+
+        calculator.RunRounds(numberOfRounds);
+
+        calculator.MonkeyActivity.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public void MonkeyBusinessLevelShouldReturnExpectedResultAfter10000RoundsNonDivide()
+    {
+        var calculator = new MonkeyBusinessCalculator(MonkeyBusinessTestData.Input, false);
+
+        calculator.RunRounds(10000);
+
+        calculator.GetMonkeyBusinessLevel(2).Should().Be(2713310158);
     }
 }
 

@@ -4,17 +4,17 @@ public sealed class MonkeyBusinessCalculator
 {
     private readonly MonkeyThief[] monkeyThieves;
 
-    public MonkeyBusinessCalculator(string input)
+    public MonkeyBusinessCalculator(string input, bool divideByThreeAfterEval = true)
     {
         monkeyThieves = input.Split(Environment.NewLine + Environment.NewLine)
-            .Select(x => new MonkeyThief(x)).ToArray();
+            .Select(x => new MonkeyThief(x, divideByThreeAfterEval)).ToArray();
     }
 
     public IEnumerable<MonkeyThief> MonkeyThieves => monkeyThieves;
 
-    public IEnumerable<int> MonkeyActivity => monkeyThieves.Select(x => x.InspectedItemsCount);
+    public IEnumerable<long> MonkeyActivity => monkeyThieves.Select(x => x.InspectedItemsCount);
 
-    public int GetMonkeyBusinessLevel(int topXMonkeys) => MonkeyActivity.OrderDescending().Take(topXMonkeys).Aggregate(1, (a, b) => a * b);
+    public long GetMonkeyBusinessLevel(int topXMonkeys) => MonkeyActivity.OrderDescending().Take(topXMonkeys).Aggregate((long)1, (a, b) => a * b);
 
     public void RunRounds(int numberOfRounds)
     {
@@ -26,13 +26,14 @@ public sealed class MonkeyBusinessCalculator
 
     private void RunRound()
     {
-        foreach(var monkey in monkeyThieves)
+        for(var i = 0; i < monkeyThieves.Length; i++)
         {
+            var monkey = monkeyThieves[i];
             monkey.InspectAndThrowItems(ThrowToMonkey);
         }
     }
 
-    private void ThrowToMonkey(int target, int item)
+    private void ThrowToMonkey(int target, long item)
     {
         monkeyThieves[target].ReceiveItem(item);
     }
@@ -40,20 +41,21 @@ public sealed class MonkeyBusinessCalculator
 
 public sealed class MonkeyThief
 {
-    public delegate void ThrowToMonkeyDelegate(int target, int item);
+    public delegate void ThrowToMonkeyDelegate(int target, long item);
 
-    private readonly Queue<int> items = new Queue<int>();
+    private readonly Queue<long> items = new Queue<long>();
     private readonly string evalString = string.Empty;
     private readonly MonkeyTargetParameters targetParameters;
+    private readonly bool divideByThreeAfterEval = true;
 
-    private int inspectedItemsCount = 0;
+    private long inspectedItemsCount = 0;
 
-    public MonkeyThief(string input)
+    public MonkeyThief(string input, bool divideByThreeAfterEval = true)
     {
         var monkeyDefinitionLines = input.Split(Environment.NewLine);
 
         // Items
-        var startingItems = monkeyDefinitionLines[1].Split(':')[1].Split(',').Select(x => int.Parse(x.Trim()));
+        var startingItems = monkeyDefinitionLines[1].Split(':')[1].Split(',').Select(x => long.Parse(x.Trim()));
         foreach(var item in startingItems) items.Enqueue(item);
 
         // Eval string
@@ -65,19 +67,21 @@ public sealed class MonkeyThief
             TrueTarget: int.Parse(monkeyDefinitionLines[4].Split("monkey")[1].Trim()),
             FalseTarget: int.Parse(monkeyDefinitionLines[5].Split("monkey")[1].Trim())
         );
+
+        this.divideByThreeAfterEval = divideByThreeAfterEval;
     }
 
-    public IEnumerable<int> Items => items;
+    public IEnumerable<long> Items => items;
 
     public string EvalString => evalString;
 
     public MonkeyTargetParameters TargetParameters => targetParameters;
 
-    public int InspectedItemsCount => inspectedItemsCount;
+    public long InspectedItemsCount => inspectedItemsCount;
 
-    public static int GetOperationValue(int currentItem, string opInput)
+    public static long GetOperationValue(long currentItem, string opInput)
     {
-        if (int.TryParse(opInput.Trim(), out var value))
+        if (long.TryParse(opInput.Trim(), out var value))
         {
             return value;
         }
@@ -86,7 +90,7 @@ public sealed class MonkeyThief
         return currentItem;
     }
 
-    public static int EvaluateItem(int itemValue, string operation)
+    public static long EvaluateItem(long itemValue, string operation)
     {
         var splitOp = operation.Split(' ');
         var a = GetOperationValue(itemValue, splitOp[0]);
@@ -102,7 +106,7 @@ public sealed class MonkeyThief
         };
     }
 
-    public void ReceiveItem(int itemValue)
+    public void ReceiveItem(long itemValue)
     {
         items.Enqueue(itemValue);
     }
@@ -115,14 +119,17 @@ public sealed class MonkeyThief
         }
     }
 
-    private void InspectAndThrowItem(int itemValue, ThrowToMonkeyDelegate handler)
+    private void InspectAndThrowItem(long itemValue, ThrowToMonkeyDelegate handler)
     {
         var evaluatedItem = EvaluateItem(itemValue, evalString);
 
         // Monkey gets bored
-        evaluatedItem /= 3;
+        if (divideByThreeAfterEval)
+        {
+            evaluatedItem = evaluatedItem / 3;
+        }
 
-        if (evaluatedItem % targetParameters.DivisibleBy == 0)
+        if (evaluatedItem % (long)targetParameters.DivisibleBy == 0)
         {
             handler(targetParameters.TrueTarget, evaluatedItem);
         }
@@ -131,7 +138,7 @@ public sealed class MonkeyThief
             handler(targetParameters.FalseTarget, evaluatedItem);
         }
 
-        inspectedItemsCount++;
+        inspectedItemsCount += 1;
     }
 }
 

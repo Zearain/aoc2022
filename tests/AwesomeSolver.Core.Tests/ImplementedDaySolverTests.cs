@@ -389,7 +389,7 @@ noop"
             11, (new[]
             {
                 MonkeyBusinessTestData.Input,
-            }, new[] { "10605", "SKIP_TEST()" })
+            }, new[] { "10605", "2713310158" })
         }
     };
 }
