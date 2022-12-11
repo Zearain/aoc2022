@@ -10,6 +10,11 @@ public sealed class MonkeyBusinessCalculator
     {
         monkeyThieves = input.Split(Environment.NewLine + Environment.NewLine)
             .Select(x => new MonkeyThief(x, divideByThreeAfterEval)).ToArray();
+
+        foreach(var monkey in monkeyThieves)
+        {
+            monkey.GetModHackValue = () => monkeyThieves.Select(x => x.TargetParameters.DivisibleBy).Aggregate(1, (a, b) => a * b);
+        }
     }
 
     public IEnumerable<MonkeyThief> MonkeyThieves => monkeyThieves;
@@ -23,6 +28,7 @@ public sealed class MonkeyBusinessCalculator
         for (int i = 0; i < numberOfRounds; i++)
         {
             RunRound();
+            // Console.WriteLine($"{DateTime.Now}: Round {i+1} completed");
         }
     }
 
@@ -35,7 +41,7 @@ public sealed class MonkeyBusinessCalculator
         }
     }
 
-    private void ThrowToMonkey(int target, BigInteger item)
+    private void ThrowToMonkey(int target, long item)
     {
         monkeyThieves[target].ReceiveItem(item);
     }
@@ -43,9 +49,10 @@ public sealed class MonkeyBusinessCalculator
 
 public sealed class MonkeyThief
 {
-    public delegate void ThrowToMonkeyDelegate(int target, BigInteger item);
+    public delegate void ThrowToMonkeyDelegate(int target, long item);
+    public delegate int GetModHackDelegate();
 
-    private readonly Queue<BigInteger> items = new Queue<BigInteger>();
+    private readonly Queue<long> items = new Queue<long>();
     private readonly string evalString = string.Empty;
     private readonly MonkeyTargetParameters targetParameters;
     private readonly bool divideByThreeAfterEval = true;
@@ -71,9 +78,11 @@ public sealed class MonkeyThief
         );
 
         this.divideByThreeAfterEval = divideByThreeAfterEval;
+
+        GetModHackValue = () => targetParameters.DivisibleBy;
     }
 
-    public IEnumerable<BigInteger> Items => items;
+    public IEnumerable<long> Items => items;
 
     public string EvalString => evalString;
 
@@ -81,7 +90,9 @@ public sealed class MonkeyThief
 
     public long InspectedItemsCount => inspectedItemsCount;
 
-    public static BigInteger GetOperationValue(BigInteger currentItem, string opInput)
+    public GetModHackDelegate GetModHackValue { get; internal set; }
+
+    public static long GetOperationValue(long currentItem, string opInput)
     {
         if (long.TryParse(opInput.Trim(), out var value))
         {
@@ -92,7 +103,7 @@ public sealed class MonkeyThief
         return currentItem;
     }
 
-    public static BigInteger EvaluateItem(BigInteger itemValue, string operation)
+    public static long EvaluateItem(long itemValue, string operation)
     {
         var splitOp = operation.Split(' ');
         var a = GetOperationValue(itemValue, splitOp[0]);
@@ -108,7 +119,7 @@ public sealed class MonkeyThief
         };
     }
 
-    public void ReceiveItem(BigInteger itemValue)
+    public void ReceiveItem(long itemValue)
     {
         items.Enqueue(itemValue);
     }
@@ -121,9 +132,12 @@ public sealed class MonkeyThief
         }
     }
 
-    private void InspectAndThrowItem(BigInteger itemValue, ThrowToMonkeyDelegate handler)
+    private void InspectAndThrowItem(long itemValue, ThrowToMonkeyDelegate handler)
     {
         var evaluatedItem = EvaluateItem(itemValue, evalString);
+
+        // Do mod hack to prevent/revert overflow
+        evaluatedItem %= GetModHackValue.Invoke();
 
         // Monkey gets bored
         if (divideByThreeAfterEval)
@@ -140,7 +154,7 @@ public sealed class MonkeyThief
             handler(targetParameters.FalseTarget, evaluatedItem);
         }
 
-        inspectedItemsCount += 1;
+        inspectedItemsCount++;
     }
 }
 
