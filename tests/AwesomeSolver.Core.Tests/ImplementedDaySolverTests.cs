@@ -390,6 +390,13 @@ noop"
             {
                 MonkeyBusinessTestData.Input,
             }, new[] { "10605", "2713310158" })
+        },
+        {
+            12, (new[] { @"Sabqponm
+abcryxxl
+accszExk
+acctuvwj
+abdefghi" }, new[] { "31", "29" })
         }
     };
 }

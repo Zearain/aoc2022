@@ -29,17 +29,22 @@
 
     private string Solution {get; set;} = string.Empty;
 
-    private async Task SolutionVisibilityChanged(bool newVal)
+    private void SolutionVisibilityChanged(bool newVal)
     {
         if (newVal)
         {
-            Solution = await SolvePartAsync(part);
+            Task.Run(InvokeSolveAsync);
         }
         else
         {
             // Reset after a while to prevent sudden collapse.
             Task.Delay(350).ContinueWith(t => Solution = string.Empty).AndForget();
         }
+    }
+
+    private async Task InvokeSolveAsync()
+    {
+        Solution = await SolvePartAsync(part);
     }
 
     private async Task<string> SolvePartAsync(int part)
