@@ -402,7 +402,7 @@ abdefghi" }, new[] { "31", "29" })
             13, (new[]
             {
                 DistressSignalParserTestData.Input,
-            }, new[] { "13", "SKIP_TEST()" })
+            }, new[] { "13", "140" })
         }
     };
 }

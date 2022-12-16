@@ -21,7 +21,7 @@ public sealed class DistressSignalParser
         return CompareArray(left, right) < 0;
     }
 
-    public static int ComparePair(string left, string right)
+    public static int ComparePackets(string left, string right)
     {
         return CompareArray(JsonSerializer.Deserialize<JsonElement>(left), JsonSerializer.Deserialize<JsonElement>(right));
     }
